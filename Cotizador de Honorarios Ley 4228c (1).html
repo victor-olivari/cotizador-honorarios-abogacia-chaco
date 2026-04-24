@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Honorarios Mínimos – Ley 4228-C – Chaco</title>
+<style>
+:root{
+  --az:#1A3C6E; --az2:#2563A8; --azc:#EAF1FB;
+  --bg:#F4F6F9; --brd:#CBD5E1; --mt:#64748B;
+  --ng:#1E293B; --bl:#FFFFFF;
+  --gv:#166534; --bgv:#DCFCE7;
+  --ga:#92400E; --bga:#FEF3C7;
+  --rd:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ng);line-height:1.5;font-size:15px}
+
+/* ── BANNER ── */
+#banner{display:none;background:#FEF3C7;border-bottom:3px solid #D97706;padding:14px 16px;font-size:.84rem;color:#78350F;line-height:1.75}
+#banner strong{color:#451A03;display:block;font-size:.9rem;margin-bottom:4px}
+#banner ol{padding-left:20px;margin-top:6px}
+#banner li{margin-bottom:3px}
+
+/* ── MODAL WA ── */
+#waModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
+#waModal.show{display:flex}
+.waBox{background:#fff;border-radius:12px;padding:22px 20px;max-width:340px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.waBox h3{font-size:1rem;margin-bottom:14px;color:var(--ng)}
+.waOpt{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:8px;border:1.5px solid var(--brd);border-radius:var(--rd);background:#fff;font-family:inherit;font-size:.88rem;cursor:pointer;color:var(--ng)}
+.waOpt:hover{background:var(--bg);border-color:var(--az2)}
+.waCancelar{color:var(--mt);font-size:.82rem;background:none;border:none;cursor:pointer;font-family:inherit;margin-top:4px;padding:6px 0;display:block;width:100%;text-align:center}
+
+/* ── HEADER ── */
+header{background:var(--az);color:#fff;padding:15px 18px 13px}
+.hi{display:flex;align-items:flex-start;gap:12px;max-width:1100px;margin:0 auto}
+.bal{flex-shrink:0;width:42px;height:46px}
+.ht h1{font-size:clamp(.87rem,3.5vw,1.25rem);font-weight:700;line-height:1.25}
+.ht p{font-size:clamp(.72rem,2.4vw,.82rem);opacity:.82;margin-top:3px}
+
+/* ── PANEL UMA ── */
+.up{background:#fff;border-bottom:1px solid var(--brd);padding:13px 18px}
+.ui{max-width:1100px;margin:0 auto}
+.ur{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:8px}
+.ul{font-weight:600;font-size:.88rem;white-space:nowrap}
+.uiw{display:flex;align-items:center;gap:7px}
+.uiw input{width:145px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:var(--rd);font-size:.92rem;color:var(--ng);font-family:inherit;-webkit-appearance:none}
+.uiw input:focus{outline:none;border-color:var(--az2)}
+.ufbtn{background:var(--az2);color:#fff;border:none;border-radius:var(--rd);padding:8px 13px;font-size:.8rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+.ufbtn:disabled{opacity:.5}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:.73rem;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.bv{background:var(--bgv);color:var(--gv)}
+.ba{background:var(--bga);color:var(--ga)}
+.ust{font-size:.78rem;color:var(--mt);line-height:1.7;margin-bottom:3px}
+.ust a{color:var(--az2);text-decoration:none}
+.uacts{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.abtn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border:1.5px solid var(--brd);border-radius:var(--rd);background:#fff;font-size:.82rem;cursor:pointer;color:var(--ng);text-decoration:none;font-family:inherit}
+.abtn:active{background:var(--bg)}
+.abtnp{border-color:var(--az2);color:var(--az2);font-weight:600}
+.abtnw{border-color:#25D366;color:#128C7E;font-weight:600}
+
+/* ── CONTROLES ── */
+.ctrl{background:#fff;border-bottom:1px solid var(--brd);padding:11px 18px}
+.cin{max-width:1100px;margin:0 auto;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.sw{position:relative;flex:1;min-width:140px}
+.sw input{
+  width:100%;padding:9px 10px 9px 32px;
+  border:1.5px solid var(--brd);border-radius:var(--rd);
+  font-size:.88rem;background:var(--bg);
+  font-family:inherit;color:var(--ng);
+  -webkit-appearance:none; /* iOS fix */
+}
+.sw input:focus{outline:none;border-color:var(--az2);background:#fff}
+.sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--mt);pointer-events:none}
+.cin select{
+  padding:9px 26px 9px 10px;border:1.5px solid var(--brd);border-radius:var(--rd);
+  font-size:.85rem;background:var(--bg);color:var(--ng);
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23718096' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+  font-family:inherit;max-width:200px;cursor:pointer;
+}
+.cin select:focus{outline:none;border-color:var(--az2)}
+.btot{font-size:.78rem;color:var(--mt);white-space:nowrap;margin-left:auto}
+
+/* ── TABLA ── */
+.tw{padding:18px;max-width:1100px;margin:0 auto}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--rd)}
+#tabla{width:100%;border-collapse:collapse;font-size:.87rem;background:#fff;border:1px solid var(--brd);min-width:540px}
+#tabla thead th{background:var(--az);color:#fff;font-weight:600;padding:11px 13px;text-align:left;white-space:nowrap}
+#tabla thead th:nth-child(2),#tabla thead th:nth-child(3),#tabla thead th:nth-child(4){text-align:center}
+#tabla tr.sec td{background:var(--az2);color:#fff;font-weight:700;font-size:.78rem;letter-spacing:.4px;text-transform:uppercase;padding:7px 13px;border-top:2px solid var(--az)}
+#tabla tbody tr.fd td{padding:9px 13px;border-bottom:1px solid var(--brd);vertical-align:middle}
+#tabla tbody tr.fd.par td{background:#fff}
+#tabla tbody tr.fd.imp td{background:var(--bg)}
+#tabla tbody tr.fd:hover td{background:var(--azc)!important}
+td.cg{color:var(--ng)}
+td.cu{text-align:center;font-weight:700;color:var(--az2);white-space:nowrap}
+td.cr{text-align:center;font-size:.76rem;color:var(--mt);white-space:nowrap}
+td.cp{text-align:right;font-weight:700;white-space:nowrap}
+.pe{display:inline-block;background:var(--bga);color:var(--ga);font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:10px}
+.nores{text-align:center;padding:40px 20px;color:var(--mt);font-size:.9rem}
+
+/* ── AVISO ── */
+.avw{max-width:1100px;margin:0 auto;padding:0 18px 32px}
+.av{background:#fff;border:1px solid var(--brd);border-left:4px solid var(--az2);border-radius:var(--rd);padding:15px 17px;font-size:.81rem;color:var(--mt);line-height:1.7}
+.av strong{color:var(--ng)}
+footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-align:center;padding:12px 18px}
+
+/* ── MOBILE: tabla → tarjetas ── */
+@media(max-width:599px){
+  .tscroll{overflow-x:visible;border-radius:0}
+  #tabla,#tabla tbody{display:block;min-width:unset;border:none;background:transparent}
+  #tabla thead{display:none}
+  #tabla tr.sec{display:block;margin-top:14px;border-radius:var(--rd) var(--rd) 0 0;overflow:hidden}
+  #tabla tr.sec td{display:block;background:var(--az2)!important;padding:8px 13px;border:none}
+  #tabla tr.fd{display:block;background:#fff;border:1px solid var(--brd);border-top:none}
+  #tabla tr.fd:last-child,#tabla tr.fd + tr.sec{border-radius:0 0 var(--rd) var(--rd)}
+  #tabla tr.fd td{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;border-bottom:1px solid #eee;gap:10px;background:#fff!important}
+  #tabla tr.fd td:first-child{background:var(--azc)!important;font-weight:600;font-size:.87rem;flex-direction:column;align-items:flex-start}
+  #tabla tr.fd td:first-child::before{display:none}
+  #tabla tr.fd td:last-child{border-bottom:none}
+  #tabla tr.fd td::before{content:attr(data-label);font-weight:600;font-size:.7rem;color:var(--mt);text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
+  .btot{display:none}
+  .abtn span{display:none}
+}
+
+/* ── PRINT ── */
+@media print{
+  @page{margin:1.5cm;size:A4}
+  #banner,.uacts,.ufbtn,.sw,.cin select,.btot,#waModal{display:none!important}
+  header{background:var(--az)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tscroll{overflow:visible}
+  #tabla{min-width:unset!important;font-size:9pt;border:1px solid #999;display:table!important}
+  #tabla thead{display:table-header-group!important}
+  #tabla tbody{display:table-row-group!important}
+  #tabla tr.sec,#tabla tr.fd{display:table-row!important}
+  #tabla tr.sec td,#tabla tr.fd td{display:table-cell!important;padding:5px 8px}
+  #tabla tr.sec td{background:var(--az2)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #tabla thead th{background:var(--az)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8pt;padding:6px 8px}
+  #tabla tr.fd td::before{display:none!important}
+  .ctrl{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- BANNER: solo móvil en WebView. JS decide si mostrarlo -->
+<div id="banner">
+  <strong>⚠ Está abriendo este archivo desde WhatsApp. Para usar todas las funciones (buscar, imprimir, exportar) siga estos pasos:</strong>
+  <div id="bIOS" style="display:none">
+    <ol>
+      <li>Toque el ícono <strong>↑ Compartir</strong> (abajo al centro)</li>
+      <li>Elija <strong>"Abrir en Safari"</strong> o <strong>"Abrir en Chrome"</strong></li>
+    </ol>
+  </div>
+  <div id="bAND" style="display:none">
+    <ol>
+      <li>Toque los <strong>tres puntos ⋮</strong> arriba a la derecha de WhatsApp</li>
+      <li>Elija <strong>"Abrir en Chrome"</strong> o <strong>"Abrir en el navegador"</strong></li>
+    </ol>
+  </div>
+  <div id="bGEN" style="display:none">
+    Abra este archivo directamente desde Chrome, Safari o su navegador predeterminado.
+  </div>
+</div>
+
+<!-- MODAL WHATSAPP -->
+<div id="waModal">
+  <div class="waBox">
+    <h3>¿Qué desea compartir?</h3>
+    <button class="waOpt" id="waOptResultado">📋 Compartir resultado de la búsqueda actual</button>
+    <button class="waOpt" id="waOptEnlace">🔗 Compartir enlace al programa</button>
+    <button class="waCancelar" id="waOptCancelar">Cancelar</button>
+  </div>
+</div>
+
+<!-- CABECERA -->
+<header>
+  <div class="hi">
+    <svg class="bal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 60" fill="none" aria-label="Balanza de la Justicia">
+      <rect x="19" y="52" width="16" height="5" rx="2.5" fill="rgba(255,255,255,.9)"/>
+      <rect x="25.2" y="12" width="3.6" height="40" fill="rgba(255,255,255,.9)"/>
+      <rect x="4" y="11" width="46" height="4" rx="2" fill="white"/>
+      <circle cx="27" cy="10" r="4" fill="white"/>
+      <circle cx="27" cy="10" r="2" fill="rgba(26,60,110,.6)"/>
+      <line x1="9.5" y1="15" x2="6.5" y2="34" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="44.5" y1="15" x2="47.5" y2="34" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M1.5,34 Q7,43 12.5,34" stroke="white" stroke-width="2.2" fill="rgba(255,255,255,.18)" stroke-linecap="round"/>
+      <path d="M41.5,34 Q47,43 52.5,34" stroke="white" stroke-width="2.2" fill="rgba(255,255,255,.18)" stroke-linecap="round"/>
+    </svg>
+    <div class="ht">
+      <h1>CONSULTA DE HONORARIOS MÍNIMOS DE LA ABOGACÍA EN EL CHACO</h1>
+      <p>Nueva Ley de Honorarios Profesionales de la Abogacía &nbsp;·&nbsp; <strong>Ley 4228-C</strong></p>
+    </div>
+  </div>
+</header>
+
+<!-- PANEL UMA -->
+<div class="up">
+  <div class="ui">
+    <div class="ur">
+      <span class="ul">Valor UMA ($)</span>
+      <div class="uiw">
+        <input type="number" id="valorUMA" value="92482" min="1" step="1" inputmode="numeric">
+        <button class="ufbtn" id="btnFetch">↻ Consultar CSJN</button>
+      </div>
+      <span id="umaBadge" class="badge ba">⚠ Último valor conocido</span>
+    </div>
+    <div id="umaSt" class="ust"></div>
+    <div class="uacts">
+      <a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank" rel="noopener" class="abtn">🔗 <span>Valor oficial CSJN</span></a>
+      <button class="abtn abtnp" id="btnPrint">🖨 <span>Imprimir / PDF</span></button>
+      <button class="abtn abtnw" id="btnWA">📲 <span>Compartir por WhatsApp</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLES BÚSQUEDA -->
+<div class="ctrl">
+  <div class="cin">
+    <div class="sw">
+      <svg class="sico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <!-- type="text" en lugar de "search" para máxima compatibilidad con WebViews -->
+      <input type="text" id="busqueda" placeholder="Buscar gestión o trámite…" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <select id="filtroFuero">
+      <option value="">Todos los fueros / secciones</option>
+    </select>
+    <span class="btot" id="badgeTotal"></span>
+  </div>
+</div>
+
+<!-- TABLA ÚNICA -->
+<div class="tw">
+  <div class="tscroll">
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th style="width:52%">Tipo de gestión / trámite</th>
+          <th style="width:9%">UMA</th>
+          <th style="width:12%">Ref. legal</th>
+          <th style="width:27%">Equivalencia en pesos</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <p class="nores" id="nores" style="display:none">No se encontraron resultados para esa búsqueda.</p>
+</div>
+
+<!-- AVISO LEGAL -->
+<div class="avw">
+  <div class="av">
+    <strong>Aviso importante.</strong> Esta herramienta ha sido elaborada por el
+    <strong>Consejo de Abogados y Procuradores de Resistencia — 1ª Circunscripción Judicial del Chaco</strong>
+    con el propósito de facilitar la consulta y la aplicación práctica de los honorarios mínimos
+    establecidos en la <strong>Ley 4228-C</strong>. La equivalencia en pesos se calcula sobre la base
+    del valor vigente de la UMA (Unidad de Medida Arancelaria), determinado periódicamente por la
+    Corte Suprema de Justicia de la Nación.<br><br>
+    Esta herramienta tiene carácter meramente <em>orientativo</em> y
+    <strong>no sustituye la lectura crítica e integral de la Ley 4228-C</strong>
+    ni el análisis jurídico pormenorizado de cada caso concreto.
+    En causas con contenido económico, la regulación definitiva resulta de aplicar
+    la escala porcentual de los arts. 19 y 21 (18%–25% del monto del proceso).
+  </div>
+</div>
+
+<footer>
+  Consejo de Abogados y Procuradores de Resistencia &nbsp;·&nbsp;
+  1ª Circunscripción Judicial del Chaco &nbsp;·&nbsp; Ley 4228-C
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════
+   BASE DE DATOS — LEY 4228-C
+   ════════════════════════════════════════════════ */
+var D=[
+{s:"Mínimo general",g:"Mínimo por cualquier actuación judicial",u:10,r:"Art. 19"},
+{s:"Familia",g:"Divorcio unilateral",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Divorcio bilateral o por presentación conjunta",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Liquidación de la comunidad de bienes",u:18,r:"Anexo I.2"},
+{s:"Familia",g:"Nulidad de matrimonio",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Procesos por Violencia Familiar",u:18,r:"Anexo I.2"},
+{s:"Familia",g:"Autorización para contraer matrimonio",u:15,r:"Anexo I.2"},
+{s:"Familia",g:"Medidas cautelares, autosatisfactivas y urgentes, guarda, reintegro y similares",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Procesos de familia sin especial regulación",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Reclamación e Impugnación de Filiación",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Declaración de estado de adoptabilidad",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Guarda asistencial y preadoptiva",u:15,r:"Anexo I.2"},
+{s:"Familia",g:"Suspensión, pérdida y rehabilitación de la responsabilidad parental",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Restitución internacional de menores",u:40,r:"Anexo I.2"},
+{s:"Familia",g:"Medidas de protección",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Tutela y curatela no contradictoria",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Tutela y curatela contradictoria",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Restricción de capacidad o declaración de incapacidad",u:35,r:"Anexo I.2"},
+{s:"Familia",g:"Solicitud de apoyo",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Adopción y adopción de integración",u:35,r:"Anexo I.2"},
+{s:"Familia",g:"Cuidado personal",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Plan de parentalidad o régimen de comunicación",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Rehabilitación de la capacidad jurídica – no contradictoria",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Rehabilitación de la capacidad jurídica – contradictoria",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Inhabilitación por prodigalidad",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Ausencia simple",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Ausencia con presunción de fallecimiento",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Internaciones",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Autorización para disponer, gravar y adquirir bienes de personas con capacidad restringida o incapaces",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Acciones relativas al nombre",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Procesos o procedimientos sin regulación específica en la ley",u:10,r:"Anexo I.2"},
+{s:"Familia",g:"Alimentos provisorios",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Alimentos definitivos",u:30,r:"Anexo I.2"},
+{s:"Familia",g:"Cese o modificación de cuota alimentaria",u:25,r:"Anexo I.2"},
+{s:"Familia",g:"Autorización supletoria para salir del país",u:20,r:"Anexo I.2"},
+{s:"Familia",g:"Ejecución de alimentos",u:15,r:"Anexo I.2"},
+{s:"Familia",g:"Ejecución de sentencia (Familia)",u:15,r:"Anexo I.2"},
+{s:"Civil y Comercial",g:"Juicio sumario",u:25,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Juicio sumarísimo",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Beneficio de litigar sin gastos",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Tercerías",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Citación de evicción",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción subrogatoria",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Prohibición de innovar",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Innovativa y prohibición de contratar",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Medidas cautelares genéricas sin contenido económico",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Autosatisfactiva",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Tutela anticipada",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción meramente declarativa de certeza",u:25,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Incidentes en general",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Diligencia Preliminar",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Prueba Anticipada",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Prueba Pericial Anticipada",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"División de cosas comunes (art. 640 CPCCCh)",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Copia y renovación de títulos (arts. 731 y 732 CPCCCh)",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Autorización para comparecer en juicio y ejercer actos jurídicos",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción sumaria de responsabilidad por incumplimiento de orden judicial",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Examen de libros por el socio",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Sucesorios",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Partidor de herencia",u:18,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Inventariador o tasador judicial",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Juicio ejecutivo y monitorio",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Ejecución de sentencia y de honorarios",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Prepara vía ejecutiva",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acciones Reales",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acciones Posesorias",u:25,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acciones de Nulidad en general",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Usucapión",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Desalojo",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Reversión de expropiación",u:25,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Cumplimiento de sentencias extranjeras (art. 513 CPCCCh y cc.)",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Homologación de Contratos, Convenios y Acuerdos",u:15,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción de cambio de nombre societaria, imposición o supresión",u:12,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Juicio de Rendición de Cuentas",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Concursos y Quiebras",u:25,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Rehabilitación del fallido",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Rechazo in limine de la quiebra pedida por deudor",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Incidente de revisión",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Incidente de Verificación Tardía",u:20,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción de verificación tempestiva de crédito",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Habeas Data",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Amparo",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción de Incidencia Colectiva",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Acción de Inconstitucionalidad",u:30,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Recurso de aclaratoria, revocatoria y revocatoria in extremis",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Recurso Apelación Ordinario",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Queja Ordinaria",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Recurso Extraordinario",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Queja extraordinaria",u:10,r:"Anexo I.3"},
+{s:"Civil y Comercial",g:"Recurso Extraordinario ante CSJN, denegado por el STJCh",u:15,r:"Anexo I.3"},
+{s:"Exhortos y oficios (Ley 22.172)",g:"Diligenciamiento de cédula ley, por cada notificación",u:5,r:"Anexo I.3"},
+{s:"Exhortos y oficios (Ley 22.172)",g:"Exhorto u oficio de inscripciones de dominio, hijuela, testamento, gravámenes, etc.",u:10,r:"Anexo I.3"},
+{s:"Exhortos y oficios (Ley 22.172)",g:"Exhorto u oficio de levantamiento de medidas",u:10,r:"Anexo I.3"},
+{s:"Exhortos y oficios (Ley 22.172)",g:"Exhorto u oficio de diligencia de prueba",u:10,r:"Anexo I.3"},
+{s:"Penal",g:"Presentación de denuncias penales con firma de letrado",u:3,r:"Anexo I.4"},
+{s:"Penal",g:"Pedidos de excarcelación",u:7,r:"Anexo I.4"},
+{s:"Penal",g:"Excarcelación concedida",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Pedido de eximición de prisión",u:7,r:"Anexo I.4"},
+{s:"Penal",g:"Eximición de prisión concedida",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Pedido de excarcelación extraordinaria, morigeración y cese de la coerción",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Excarcelación extraordinaria, morigeración y cese de la coerción concedidas",u:20,r:"Anexo I.4"},
+{s:"Penal",g:"Hábeas Corpus",u:10,r:"Anexo I.4"},
+{s:"Penal",g:"Contravenciones o faltas administrativas",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Investigación penal preparatoria",u:20,r:"Anexo I.4"},
+{s:"Penal",g:"Investigación penal preparatoria: Con sobreseimiento",u:30,r:"Anexo I.4"},
+{s:"Penal",g:"Debate – Juicio correccional",u:25,r:"Anexo I.4"},
+{s:"Penal",g:"Debate – Juicio correccional: Absolución",u:30,r:"Anexo I.4"},
+{s:"Penal",g:"Debate – Juicio criminal",u:30,r:"Anexo I.4"},
+{s:"Penal",g:"Debate – Juicio criminal: Con más de 7 jornadas de debate",u:45,r:"Anexo I.4"},
+{s:"Penal",g:"Debate – Juicio criminal: Absolución",u:50,r:"Anexo I.4"},
+{s:"Penal",g:"Juicio Abreviado Correccional",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Juicio Abreviado Criminal",u:20,r:"Anexo I.4"},
+{s:"Penal",g:"Actuación ante la ORAC",u:15,r:"Anexo I.4"},
+{s:"Penal",g:"Querellante particular: En la Investigación penal preparatoria",u:20,r:"Anexo I.4"},
+{s:"Penal",g:"Querellante particular: En el debate",u:35,r:"Anexo I.4"},
+{s:"Penal",g:"Querellante particular: Con obtención de condena",u:50,r:"Anexo I.4"},
+{s:"Del Trabajo",g:"Demanda",u:23,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Contestación de Demanda",u:24,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Acción de Amparo",u:16,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Medida Cautelar",u:8,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Medida Autosatisfactiva",u:13,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Desalojo Laboral",u:20,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Embargo Preventivo",u:20,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Procedimiento abreviado",u:16,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Recurso de Apelación Ante la CAT",u:12,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Apelación Dictámenes Médicos",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Tercería de Dominio",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Levantamiento de Embargo",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Sustitución de embargo",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Medidas Preliminares",u:15,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Prueba Anticipada",u:15,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Ejecución de Sentencia",u:15,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Revisión de Actos Administrativos",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Incidentes",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Ejecución de Créditos Reconocidos",u:10,r:"Anexo I.5"},
+{s:"Del Trabajo",g:"Restitución de Multas",u:10,r:"Anexo I.5"},
+{s:"Contencioso Administrativo",g:"Demanda contencioso administrativa de plena jurisdicción",u:30,r:"Anexo I.6"},
+{s:"Contencioso Administrativo",g:"Agotamiento de vía administrativa",u:15,r:"Anexo I.6"},
+{s:"Contencioso Administrativo",g:"Demanda contencioso administrativa de ilegitimidad",u:30,r:"Anexo I.6"},
+{s:"Contencioso Administrativo",g:"Mandamiento de ejecución y prohibición",u:30,r:"Anexo I.6"},
+{s:"Contencioso Administrativo",g:"Amparo por mora",u:30,r:"Anexo I.6"},
+{s:"Defensa del Consumidor",g:"Procesos bajo normas del Derecho del Consumidor sin objeto pecuniario",u:25,r:"Anexo I.7"},
+{s:"Defensa del Consumidor",g:"Proceso de Derecho de Consumo donde la escala del art. 18 arroja honorarios inferiores a esta escala",u:25,r:"Anexo I.7"},
+{s:"Defensa del Consumidor",g:"Intervención ante organismos Administrativos de aplicación de la Ley 24.240",u:10,r:"Anexo I.7"},
+{s:"Escalas generales – causas con contenido económico",g:"Honorarios 1ª instancia – parte VENCEDORA",u:null,r:"Arts. 19, 21",e:"22%–25% del monto del proceso"},
+{s:"Escalas generales – causas con contenido económico",g:"Honorarios 1ª instancia – parte VENCIDA",u:null,r:"Arts. 19, 21",e:"18%–21% del monto del proceso"},
+{s:"Escalas generales – causas con contenido económico",g:"Representación / procuración sin patrocinio letrado",u:null,r:"Art. 25",e:"50% de la escala del art. 20"},
+{s:"Escalas generales – causas con contenido económico",g:"Abogado en doble carácter (patrocinio + procuración)",u:null,r:"Art. 25",e:"Escala art. 20 + 50% por procuración"},
+{s:"Escalas generales – causas con contenido económico",g:"Honorarios posteriores a sentencia (ejecución, planillas)",u:null,r:"Art. 20",e:"20%–35% de lo regulado en sentencia"},
+{s:"Escalas generales – causas con contenido económico",g:"Ejecución de honorarios sin oposición",u:null,r:"Art. 32 d)",e:"80% de la escala del art. 18"},
+{s:"Escalas generales – causas con contenido económico",g:"Ejecución de honorarios con oposición",u:null,r:"Art. 32 d)",e:"Escala art. 18 sin reducción"},
+{s:"Escalas generales – causas con contenido económico",g:"Transacción / desistimiento / caducidad – solo dem. y contest.",u:null,r:"Art. 23",e:"70% de lo correspondiente"},
+{s:"Escalas generales – causas con contenido económico",g:"Transacción / desistimiento – con audiencia preliminar",u:null,r:"Art. 23",e:"80% de lo correspondiente"},
+{s:"Escalas generales – causas con contenido económico",g:"Transacción / desistimiento – con prueba producida",u:null,r:"Art. 23",e:"100% de lo correspondiente"},
+{s:"Escalas generales – causas con contenido económico",g:"Cuestión de puro derecho declarada",u:null,r:"Art. 23",e:"80% de lo correspondiente"},
+{s:"Extrajudicial",g:"Consulta Verbal",u:0.5,r:"Anexo II"},
+{s:"Extrajudicial",g:"Consulta Escrita",u:1,r:"Anexo II"},
+{s:"Extrajudicial",g:"Consulta Verbal fuera del horario de atención",u:1.5,r:"Anexo II"},
+{s:"Extrajudicial",g:"Estudio Fundado sobre tema específico",u:4,r:"Anexo II"},
+{s:"Extrajudicial",g:"Acuerdos extrajudiciales",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Estudio de Títulos",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción CD, telegrama, etc.",u:2,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción Denuncias penales sin firma letrada",u:5,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de estatutos de SA o SCA",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de estatutos de Cooperativas",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de estatutos de otros tipos sociales",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Constitución de Personas Jurídicas en General",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción de contrato o estatuto, modificación, prórroga, etc.",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Actuación Administrativa",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Trámite ante RPI, RPC, RPA",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Trámite ante Inspección General de Persona Jurídica",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de otros contratos",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de Testamento",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Estudio de actuaciones judiciales o administrativas",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Asistencia en la realización de actos jurídicos",u:5,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción Contrato de Locación",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción Boleto de Compraventa",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de reglamentos de copropiedad",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Redacción de Contratos de adhesión",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Actuación en la Mediación",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Clausura de Mediación sin acuerdo",u:6,r:"Anexo II"},
+{s:"Extrajudicial",g:"Actuación en Arbitraje",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Asistencia a audiencia de mediación o conciliación",u:5,r:"Anexo II"},
+{s:"Extrajudicial",g:"Juicio ante Amigables Componedores",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Cobro de créditos extrajudicial",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Declaraciones Juradas, fichas o planillas impositivas",u:10,r:"Anexo II"},
+{s:"Extrajudicial",g:"Legalización de Partidas o Documentos",u:4,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripciones de nacimiento, nombres, estado civil y sus registraciones",u:20,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción matrículas sin valor económico",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción art. 320 CCyCN",u:4,r:"Anexo II"},
+{s:"Extrajudicial",g:"Rúbrica de libros contables",u:2,r:"Anexo II"},
+{s:"Extrajudicial",g:"Consulta homonimia",u:2,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción Sociedad constituida en el extranjero",u:12,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción de sociedad en general",u:15,r:"Anexo II"},
+{s:"Extrajudicial",g:"Trámite de Inscripción ante Inspección e Personería Jurídica",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Transferencia de fondo de Comercio",u:16,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción de Directorio, Gerencia o Administrador",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Aumento de capital",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Cancelación por cambio de jurisdicción",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Cambio de jurisdicción a la Provincia del Chaco",u:12,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción de Sucursal",u:8,r:"Anexo II"},
+{s:"Extrajudicial",g:"Modificación de Contrato. Cesión de cuotas SRL",u:12,r:"Anexo II"},
+{s:"Extrajudicial",g:"Modificación de Contrato. Incorporación de herederos SRL",u:12,r:"Anexo II"},
+{s:"Extrajudicial",g:"Prórroga o Reconducción de Sociedad",u:12,r:"Anexo II"},
+{s:"Extrajudicial",g:"Solicitud de copias",u:6,r:"Anexo II"},
+{s:"Extrajudicial",g:"Solicitud de certificados",u:4,r:"Anexo II"},
+{s:"Extrajudicial",g:"Cambio de Domicilio",u:6,r:"Anexo II"},
+{s:"Extrajudicial",g:"Cambio de Sede Social",u:2,r:"Anexo II"},
+{s:"Extrajudicial",g:"Autorización sistema contable computarizado",u:4,r:"Anexo II"},
+{s:"Extrajudicial",g:"Inscripción de poder",u:1,r:"Anexo II"},
+{s:"Extrajudicial",g:"Escisión, Fusión, Liquidación, Subsanación, Transformación",u:8,r:"Anexo II"}
+];
+
+/* ════════════════════════════════════════════════
+   ESTADO GLOBAL
+   ════════════════════════════════════════════════ */
+/* Último valor conocido hardcodeado. Se actualiza si fetch tiene éxito. */
+var UMA_FALLBACK = 92482;
+var UMA_RES      = "Res. SGA N\u00b0 36/2026";
+var UMA_VIG      = "1\u00b0 de febrero de 2026";
+var CK = 'uma_4228c_v5';
+var TTL = 12*60*60*1000;
+
+/* ── HELPERS ── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtP(n){ return '$\u202f'+Math.round(n).toLocaleString('es-AR'); }
+function getUMA(){
+  var v = parseFloat(document.getElementById('valorUMA').value);
+  return (!isNaN(v) && v > 0) ? v : UMA_FALLBACK;
+}
+function loadCache(){
+  try{
+    var d = JSON.parse(localStorage.getItem(CK));
+    if(d && d.valor && (Date.now()-d.ts) < TTL) return d;
+  }catch(e){}
+  return null;
+}
+function saveCache(o){
+  try{ localStorage.setItem(CK, JSON.stringify({valor:o.valor,res:o.res,vig:o.vig,ts:Date.now()})); }catch(e){}
+}
+
+/* ── MOSTRAR UMA (sin spinner, siempre inmediato) ── */
+function mostrarUMA(o, estado){
+  var inp   = document.getElementById('valorUMA');
+  var badge = document.getElementById('umaBadge');
+  var st    = document.getElementById('umaSt');
+  if(o && o.valor) inp.value = o.valor;
+  var val = Math.round(getUMA()).toLocaleString('es-AR');
+  var res = (o && o.res) || UMA_RES;
+  var vig = (o && o.vig) || UMA_VIG;
+  var msgs = {
+    ok:       '\u2713 Actualizado desde CSJN',
+    cache:    '\u2713 Verificado recientemente (cach\u00e9)',
+    manual:   '\u270f Simulando valor ingresado manualmente',
+    fallback: '\u26a0 \u00daltimo valor conocido – verifique en CSJN',
+    error:    '\u26a0 Sin conexi\u00f3n – usando \u00faltimo valor conocido'
+  };
+  badge.className = (estado==='ok'||estado==='cache') ? 'badge bv' : 'badge ba';
+  badge.textContent = msgs[estado] || msgs.fallback;
+  st.innerHTML =
+    'UMA: <strong>$'+val+'</strong>' +
+    ' &nbsp;\u00b7&nbsp; '+esc(res)+
+    ' &nbsp;\u00b7&nbsp; Vigente desde '+esc(vig)+
+    ' &nbsp;\u00b7&nbsp; <a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank" rel="noopener">csjn.gov.ar/transparencia/uma</a>';
+  renderTabla();
+}
+
+/* ── FIX 2: FETCH UMA SOLO MANUAL (sin auto-fetch al iniciar)
+   Usa XMLHttpRequest (más compatible que fetch en WebViews).
+   Jamás muestra spinner. Resuelve en ≤5 s o muestra error. ── */
+function fetchUMA(){
+  /* Desde file:// el browser bloquea todas las requests externas. Explicar. */
+  if(location.protocol === 'file:'){
+    mostrarUMA(null, 'error');
+    document.getElementById('umaSt').innerHTML +=
+      '<br><small style="color:#92400E">⚠ Abriendo como archivo local (file://) — el navegador bloquea la conexión a CSJN. '+
+      'Para actualización automática, comparta el archivo desde un servidor web. '+
+      'Puede ingresar el valor manualmente o consultarlo en '+
+      '<a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank">csjn.gov.ar/transparencia/uma</a></small>';
+    return;
+  }
+  var btn = document.getElementById('btnFetch');
+  btn.disabled = true;
+  btn.textContent = 'Consultando\u2026';
+  var done = false;
+  var timer = setTimeout(function(){
+    if(!done){ done=true; btn.disabled=false; btn.textContent='\u21bb Consultar CSJN'; mostrarUMA(loadCache()||null,'error'); }
+  }, 5000);
+  function fin(o, estado){
+    if(done) return; done=true;
+    clearTimeout(timer);
+    btn.disabled=false; btn.textContent='\u21bb Consultar CSJN';
+    if(o) saveCache(o);
+    mostrarUMA(o||loadCache()||null, estado);
+  }
+  function parseH(h){
+    if(!h || h.length<200) return null;
+    var m = h.match(/\$([\d]{1,3}(?:\.[\d]{3})+)/);
+    if(!m) return null;
+    var v = parseFloat(m[1].replace(/\./g,''));
+    if(v<50000 || v>5000000) return null;
+    var res = UMA_RES;
+    var rm = h.match(/N[°\u00ba]?\s*(\d+\/20\d\d)/i); if(rm) res='Res. SGA N\u00b0 '+rm[1];
+    var vig = UMA_VIG;
+    var dm = h.match(/(\d+[°\u00ba]?\s*de\s+\w+\s+de\s+20\d\d)/i); if(dm) vig=dm[1];
+    return {valor:Math.round(v), res:res, vig:vig};
+  }
+  var TARGET = 'https://www.csjn.gov.ar/transparencia/uma';
+  var proxies = [
+    'https://corsproxy.io/?'+encodeURIComponent(TARGET),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(TARGET)
+  ];
+  var tried = 0;
+  function tryNext(){
+    if(tried >= proxies.length){ fin(null,'error'); return; }
+    var url = proxies[tried++];
+    var x = new XMLHttpRequest();
+    x.timeout = 4000;
+    x.onreadystatechange = function(){
+      if(x.readyState===4){
+        if(x.status>=200 && x.status<300){
+          var p = parseH(x.responseText);
+          if(p){ fin(p,'ok'); } else { tryNext(); }
+        } else { tryNext(); }
+      }
+    };
+    x.ontimeout = x.onerror = tryNext;
+    x.open('GET', url, true); x.send();
+  }
+  tryNext();
+}
+
+/* ── FIX 3: RENDER con innerHTML + setInterval polling
+   innerHTML es el método más robusto en cualquier WebView.
+   setInterval garantiza que el search funcione sin importar
+   qué eventos dispare (o no dispare) el WebView. ── */
+var lastBusq = '', lastFuero = '';
+function renderTabla(){
+  var uma   = getUMA();
+  var busq  = (document.getElementById('busqueda').value || '').toLowerCase().trim();
+  var fuero = document.getElementById('filtroFuero').value || '';
+  var html  = '', secAct = null, par = 0, cnt = 0;
+  for(var i=0; i<D.length; i++){
+    var it = D[i];
+    if(fuero && it.s !== fuero) continue;
+    if(busq && it.g.toLowerCase().indexOf(busq)<0 && it.s.toLowerCase().indexOf(busq)<0) continue;
+    if(it.s !== secAct){
+      secAct = it.s; par = 0;
+      html += '<tr class="sec"><td colspan="4">'+esc(it.s)+'</td></tr>';
+    }
+    var umaStr   = it.u!==null && it.u!==undefined ? it.u+' UMA' : '\u2014';
+    var esEscala = it.u===null || it.u===undefined;
+    var pesosStr = esEscala
+      ? '<span class="pe">'+esc(it.e||'Escala %')+'</span>'
+      : esc(uma>0 ? fmtP(it.u*uma) : '\u2014');
+    html += '<tr class="fd '+(par%2===0?'par':'imp')+'">';
+    html += '<td class="cg" data-label="">'+esc(it.g)+'</td>';
+    html += '<td class="cu" data-label="UMA">'+esc(umaStr)+'</td>';
+    html += '<td class="cr" data-label="Ref.">'+esc(it.r||'')+'</td>';
+    html += '<td class="cp" data-label="En pesos">'+pesosStr+'</td>';
+    html += '</tr>';
+    par++; cnt++;
+  }
+  document.getElementById('tbody').innerHTML = html;
+  document.getElementById('badgeTotal').textContent = cnt+' ítems';
+  var hay = cnt > 0;
+  document.getElementById('nores').style.display  = hay ? 'none' : 'block';
+  document.getElementById('tabla').style.display  = hay ? '' : 'none';
+}
+
+/* Polling: 100% fiable en cualquier WebView */
+function startPolling(){
+  setInterval(function(){
+    var b = (document.getElementById('busqueda').value||'').trim();
+    var f = document.getElementById('filtroFuero').value||'';
+    if(b!==lastBusq || f!==lastFuero){ lastBusq=b; lastFuero=f; renderTabla(); }
+  }, 200);
+}
+
+/* ── FIX 4: BANNER solo en TELÉFONO móvil + WebView ── */
+function checkBanner(){
+  var ua = navigator.userAgent || '';
+  /* Excluir escritorios Windows/Mac/Linux: no tienen "Mobi" ni "iPhone"/"iPod" */
+  var isMobilePhone = /Mobi|Mobile/i.test(ua) && !/iPad/i.test(ua);
+  /* iPhone/iPod son móviles aunque no siempre tienen "Mobi" */
+  var isIPhoneOrIPod = /iPhone|iPod/i.test(ua);
+  if(!isMobilePhone && !isIPhoneOrIPod) return; /* desktop, tablet → sin banner */
+  /* Detectar si estamos en WebView */
+  var inWA    = /WhatsApp/i.test(ua);
+  var inFB    = /FBAN|FBAV|FB_IAB/i.test(ua);
+  var inIG    = /Instagram/i.test(ua);
+  var iosWV   = isIPhoneOrIPod && /AppleWebKit/i.test(ua) && !/Safari\//i.test(ua);
+  var andWV   = /Android/i.test(ua) && (/wv[;\)]/i.test(ua) || /Version\/\d.*Chrome/i.test(ua));
+  var isFile  = location.protocol === 'file:';
+  if(!inWA && !inFB && !inIG && !iosWV && !andWV && !isFile) return; /* navegador real → sin banner */
+  document.getElementById('banner').style.display = 'block';
+  var isIOS = isIPhoneOrIPod || (/iPad/i.test(ua) && iosWV);
+  var isAnd = /Android/i.test(ua);
+  if(isIOS)      document.getElementById('bIOS').style.display='block';
+  else if(isAnd) document.getElementById('bAND').style.display='block';
+  else           document.getElementById('bGEN').style.display='block';
+}
+
+/* ── FIX 5: BOTÓN WHATSAPP con modal ── */
+function getItemsVisibles(){
+  var busq  = (document.getElementById('busqueda').value||'').toLowerCase().trim();
+  var fuero = document.getElementById('filtroFuero').value||'';
+  var res   = [];
+  for(var i=0;i<D.length;i++){
+    var it=D[i];
+    if(fuero && it.s!==fuero) continue;
+    if(busq && it.g.toLowerCase().indexOf(busq)<0 && it.s.toLowerCase().indexOf(busq)<0) continue;
+    res.push(it);
+  }
+  return res;
+}
+function enviarResultados(){
+  var uma   = getUMA();
+  var busq  = (document.getElementById('busqueda').value||'').trim();
+  var items = getItemsVisibles();
+  var max   = Math.min(items.length, 15);
+  var lineas= [
+    '*Honorarios M\u00ednimos \u2014 Ley 4228-C Chaco*',
+    'Consulta: '+(busq?'"'+busq+'"':'todas las gestiones'),
+    'UMA vigente: $'+Math.round(uma).toLocaleString('es-AR'),
+    'Fecha: '+new Date().toLocaleDateString('es-AR'),
+    ''
+  ];
+  var secAnt='';
+  for(var i=0;i<max;i++){
+    var it=items[i];
+    if(it.s!==secAnt){ secAnt=it.s; lineas.push('\u2014 *'+it.s+'* \u2014'); }
+    var pesos = it.u!==null && it.u!==undefined ? fmtP(it.u*uma) : (it.e||'Escala %');
+    lineas.push('\u2022 '+it.g);
+    lineas.push('  '+( it.u!==null&&it.u!==undefined ? it.u+' UMA = '+pesos : pesos ));
+  }
+  if(items.length>max) lineas.push('\u2026 y '+(items.length-max)+' gest. m\u00e1s');
+  lineas.push('');
+  lineas.push('_Consejo de Abogados y Procuradores de Resistencia_');
+  lineas.push('_1\u00aa Circunscripci\u00f3n Judicial del Chaco \u2014 Ley 4228-C_');
+  var txt = lineas.join('\n');
+  cerrarModal();
+  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(txt),'_blank');
+}
+function enviarEnlace(){
+  var url = location.protocol==='file:'
+    ? '(El programa est\u00e1 guardado como archivo local. Para compartirlo, s\u00fabalo a un servidor o compart\u00e1 el archivo directamente.)'
+    : location.href;
+  var txt =
+    '*Honorarios M\u00ednimos \u2014 Ley 4228-C Chaco*\n\n'+
+    'Herramienta del Consejo de Abogados y Procuradores de Resistencia\n'+
+    '1\u00aa Circunscripci\u00f3n Judicial del Chaco\n\n'+
+    'Enlace al programa:\n'+url+'\n\n'+
+    '_Para usar todas las funciones, \u00e1bralo en Chrome o Safari._';
+  cerrarModal();
+  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(txt),'_blank');
+}
+function mostrarModal(){
+  var modal = document.getElementById('waModal');
+  var items = getItemsVisibles();
+  var busq  = (document.getElementById('busqueda').value||'').trim();
+  /* Si hay búsqueda activa con resultados, ir directo a enviar */
+  if(busq && items.length>0 && items.length<=50){
+    enviarResultados(); return;
+  }
+  /* Si no hay búsqueda o hay demasiados ítems, mostrar modal */
+  modal.className = 'show';
+}
+function cerrarModal(){
+  document.getElementById('waModal').className='';
+}
+
+/* ════════════════════════════════════════════════
+   INICIO — window.onload (más compatible que
+   DOMContentLoaded en WebViews)
+   ════════════════════════════════════════════════ */
+window.onload = function(){
+  /* Poblar select de fueros */
+  var sel  = document.getElementById('filtroFuero');
+  var seen = {};
+  for(var i=0;i<D.length;i++){
+    if(!seen[D[i].s]){
+      seen[D[i].s]=true;
+      var o=document.createElement('option');
+      o.value=D[i].s; o.textContent=D[i].s;
+      sel.appendChild(o);
+    }
+  }
+
+  /* Listeners para input UMA manual */
+  document.getElementById('valorUMA').addEventListener('change', function(){
+    mostrarUMA(null,'manual');
+  });
+
+  /* Listeners búsqueda — PLUS polling como respaldo */
+  var bEl = document.getElementById('busqueda');
+  bEl.addEventListener('input',   renderTabla);
+  bEl.addEventListener('keyup',   renderTabla);
+  bEl.addEventListener('change',  renderTabla);
+  sel.addEventListener('change',  renderTabla);
+  startPolling(); /* ← respaldo absoluto para WebViews que ignoran eventos */
+
+  /* Botones */
+  document.getElementById('btnFetch').addEventListener('click', fetchUMA);
+  document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
+  document.getElementById('btnWA').addEventListener('click',    mostrarModal);
+
+  /* Modal */
+  document.getElementById('waOptResultado').addEventListener('click', enviarResultados);
+  document.getElementById('waOptEnlace').addEventListener('click',    enviarEnlace);
+  document.getElementById('waOptCancelar').addEventListener('click',  cerrarModal);
+  document.getElementById('waModal').addEventListener('click', function(e){
+    if(e.target===this) cerrarModal();
+  });
+
+  /* FIX 2: Mostrar UMA INMEDIATAMENTE desde caché o fallback.
+     Sin fetch automático al cargar. Sin spinner. */
+  var cached = loadCache();
+  mostrarUMA(cached || null, cached ? 'cache' : 'fallback');
+
+  /* FIX 4: Banner */
+  checkBanner();
+};
+</script>
+</body>
+</html>
