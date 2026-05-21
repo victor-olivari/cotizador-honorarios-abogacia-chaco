@@ -495,11 +495,14 @@ var D=[
 /* ════════════════════════════════════════════════
    ESTADO GLOBAL
    ════════════════════════════════════════════════ */
-/* Último valor conocido hardcodeado. Se actualiza si fetch tiene éxito. */
-var UMA_FALLBACK = 92482;
-var UMA_RES      = "Res. SGA N\u00b0 36/2026";
-var UMA_VIG      = "1\u00b0 de febrero de 2026";
-var CK = 'uma_4228c_v5';
+/* Último valor oficial — actualizado automáticamente vía GitHub Action.
+   Fuente: https://www.csjn.gov.ar/transparencia/uma                  */
+var UMA_FALLBACK = 95626;
+var UMA_RES      = "Res. SGA N\u00b0 1076/2026";
+var UMA_VIG      = "1\u00b0 de marzo de 2026";
+/* JSON con el valor siempre vigente — raw.githubusercontent tiene CORS: * */
+var UMA_JSON_URL = "https://raw.githubusercontent.com/victor-olivari/cotizador-honorarios-abogacia-chaco/main/uma-data.json";
+var CK = 'uma_4228c_v6';
 var TTL = 12*60*60*1000;
 
 /* ── HELPERS ── */
@@ -546,17 +549,18 @@ function mostrarUMA(o, estado){
   renderTabla();
 }
 
-/* ── FIX 2: FETCH UMA SOLO MANUAL (sin auto-fetch al iniciar)
-   Usa XMLHttpRequest (más compatible que fetch en WebViews).
-   Jamás muestra spinner. Resuelve en ≤5 s o muestra error. ── */
+/* ── FETCH UMA — nueva estrategia en 3 niveles:
+   1. raw.githubusercontent.com/uma-data.json  (CORS *, fiable, actualizado por GitHub Action)
+   2. CORS proxy → página CSJN                 (respaldo si el JSON no está disponible)
+   3. Valor hardcodeado                         (fallback final siempre disponible)
+   ── */
 function fetchUMA(){
-  /* Desde file:// el browser bloquea todas las requests externas. Explicar. */
   if(location.protocol === 'file:'){
     mostrarUMA(null, 'error');
-    document.getElementById('umaSt').innerHTML +=
-      '<br><small style="color:#92400E">⚠ Abriendo como archivo local (file://) — el navegador bloquea la conexión a CSJN. '+
-      'Para actualización automática, comparta el archivo desde un servidor web. '+
-      'Puede ingresar el valor manualmente o consultarlo en '+
+    var st = document.getElementById('umaSt');
+    if(st) st.innerHTML +=
+      '<br><small style="color:#92400E">\u26a0 Archivo local (file://) — el navegador bloquea las conexiones externas. '+
+      'Ingrese el valor manualmente o consúltelo en '+
       '<a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank">csjn.gov.ar/transparencia/uma</a></small>';
     return;
   }
@@ -564,51 +568,70 @@ function fetchUMA(){
   btn.disabled = true;
   btn.textContent = 'Consultando\u2026';
   var done = false;
-  var timer = setTimeout(function(){
-    if(!done){ done=true; btn.disabled=false; btn.textContent='\u21bb Consultar CSJN'; mostrarUMA(loadCache()||null,'error'); }
-  }, 5000);
+  /* Temporizador de seguridad: 12 s máximo antes de mostrar fallback */
+  var safeTimer = setTimeout(function(){
+    if(!done){ done=true; btn.disabled=false; btn.textContent='\u21bb Consultar CSJN';
+      mostrarUMA(loadCache()||null, 'error'); }
+  }, 12000);
   function fin(o, estado){
     if(done) return; done=true;
-    clearTimeout(timer);
+    clearTimeout(safeTimer);
     btn.disabled=false; btn.textContent='\u21bb Consultar CSJN';
     if(o) saveCache(o);
     mostrarUMA(o||loadCache()||null, estado);
   }
-  function parseH(h){
-    if(!h || h.length<200) return null;
-    var m = h.match(/\$([\d]{1,3}(?:\.[\d]{3})+)/);
-    if(!m) return null;
-    var v = parseFloat(m[1].replace(/\./g,''));
-    if(v<50000 || v>5000000) return null;
-    var res = UMA_RES;
-    var rm = h.match(/N[°\u00ba]?\s*(\d+\/20\d\d)/i); if(rm) res='Res. SGA N\u00b0 '+rm[1];
-    var vig = UMA_VIG;
-    var dm = h.match(/(\d+[°\u00ba]?\s*de\s+\w+\s+de\s+20\d\d)/i); if(dm) vig=dm[1];
-    return {valor:Math.round(v), res:res, vig:vig};
-  }
-  var TARGET = 'https://www.csjn.gov.ar/transparencia/uma';
-  var proxies = [
-    'https://corsproxy.io/?'+encodeURIComponent(TARGET),
-    'https://api.allorigins.win/raw?url='+encodeURIComponent(TARGET)
-  ];
-  var tried = 0;
-  function tryNext(){
-    if(tried >= proxies.length){ fin(null,'error'); return; }
-    var url = proxies[tried++];
+  function xhrGet(url, timeout, cb){
     var x = new XMLHttpRequest();
-    x.timeout = 4000;
+    var timedOut = false;
+    var t = setTimeout(function(){ timedOut=true; try{x.abort();}catch(e){} cb(null); }, timeout);
     x.onreadystatechange = function(){
-      if(x.readyState===4){
-        if(x.status>=200 && x.status<300){
-          var p = parseH(x.responseText);
-          if(p){ fin(p,'ok'); } else { tryNext(); }
-        } else { tryNext(); }
-      }
+      if(x.readyState===4){ clearTimeout(t); if(timedOut) return;
+        if(x.status>=200 && x.status<300) cb(x.responseText); else cb(null); }
     };
-    x.ontimeout = x.onerror = tryNext;
+    x.onerror = function(){ clearTimeout(t); if(!timedOut) cb(null); };
     x.open('GET', url, true); x.send();
   }
-  tryNext();
+
+  /* ─── Nivel 1: JSON desde GitHub (siempre actualizado, CORS habilitado) ─── */
+  xhrGet(UMA_JSON_URL, 6000, function(txt){
+    if(txt){
+      try{
+        var d = JSON.parse(txt);
+        if(d && d.valor && d.valor>50000 && d.valor<5000000){
+          fin({valor:d.valor, res:d.res||UMA_RES, vig:d.vig||UMA_VIG}, 'ok');
+          return;
+        }
+      }catch(e){}
+    }
+    /* ─── Nivel 2: CORS proxy → página CSJN (respaldo) ─── */
+    function parseHtml(h){
+      if(!h||h.length<200) return null;
+      /* La página CSJN es una SPA — no tiene datos en el HTML estático,
+         pero si algún proxy los devuelve, los parseamos */
+      var m = h.match(/\$\s*([\d\.]+)/);
+      if(!m) return null;
+      var v = parseFloat(m[1].replace(/\./g,''));
+      if(v<50000||v>5000000) return null;
+      var res=UMA_RES, vig=UMA_VIG;
+      var rm=h.match(/N[°\u00ba]?\s*(\d+\/20\d\d)/i); if(rm) res='Res. SGA N\u00b0 '+rm[1];
+      var dm=h.match(/(\d+[°\u00ba]?\s*de\s+\w+\s+de\s+20\d\d)/i); if(dm) vig=dm[1];
+      return {valor:Math.round(v), res:res, vig:vig};
+    }
+    var TARGET = 'https://www.csjn.gov.ar/transparencia/uma';
+    var proxies = [
+      'https://corsproxy.io/?'+encodeURIComponent(TARGET),
+      'https://api.allorigins.win/raw?url='+encodeURIComponent(TARGET)
+    ];
+    var tried=0;
+    function tryProxy(){
+      if(tried>=proxies.length){ fin(null,'error'); return; }
+      xhrGet(proxies[tried++], 5000, function(h){
+        var p=h&&parseHtml(h);
+        if(p){ fin(p,'ok'); } else { tryProxy(); }
+      });
+    }
+    tryProxy();
+  });
 }
 
 /* ── FIX 3: RENDER con innerHTML + setInterval polling

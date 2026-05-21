@@ -1,0 +1,64 @@
+name: Actualizar valor UMA
+
+# Se ejecuta automáticamente el día 2 de cada mes (la CSJN suele publicar a principios de mes)
+# También se puede ejecutar manualmente desde la pestaña Actions de GitHub
+on:
+  schedule:
+    - cron: '0 14 2 * *'   # 2 de cada mes, 14:00 UTC (11:00 hs Argentina)
+    - cron: '0 14 10 * *'  # 10 de cada mes (segundo intento si no publicaron aún)
+    - cron: '0 14 20 * *'  # 20 de cada mes (tercer intento)
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Forzar actualización aunque el ID no haya cambiado'
+        required: false
+        default: 'false'
+
+jobs:
+  update-uma:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Ejecutar script de actualización
+        run: python3 .github/scripts/update_uma.py
+        timeout-minutes: 5
+
+      - name: Verificar cambios
+        id: cambios
+        run: |
+          if git diff --quiet uma-data.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Cambios detectados en uma-data.json:"
+            git diff uma-data.json
+          fi
+
+      - name: Commit y push si hubo cambios
+        if: steps.cambios.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          VALOR=$(python3 -c "import json; d=json.load(open('uma-data.json')); print(d['valor'])")
+          RES=$(python3   -c "import json; d=json.load(open('uma-data.json')); print(d['res'])")
+          git add uma-data.json
+          git commit -m "UMA: \$${VALOR} — ${RES} [auto]"
+          git push
+          echo "✓ uma-data.json actualizado y publicado."
+
+      - name: Sin cambios
+        if: steps.cambios.outputs.changed == 'false'
+        run: echo "El valor UMA no cambió. uma-data.json no fue modificado."
