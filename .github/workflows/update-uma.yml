@@ -4,9 +4,7 @@ name: Actualizar valor UMA
 # También se puede ejecutar manualmente desde la pestaña Actions de GitHub
 on:
   schedule:
-    - cron: '0 14 2 * *'   # 2 de cada mes, 14:00 UTC (11:00 hs Argentina)
-    - cron: '0 14 10 * *'  # 10 de cada mes (segundo intento si no publicaron aún)
-    - cron: '0 14 20 * *'  # 20 de cada mes (tercer intento)
+    - cron: '0 14 * * *'   # Todos los días, 14:00 UTC (11:00 hs Argentina)
   workflow_dispatch:
     inputs:
       force:
