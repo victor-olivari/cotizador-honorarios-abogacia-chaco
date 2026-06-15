@@ -187,17 +187,9 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
   #tabla tr.fd td:first-child::before{display:none}
   #tabla tr.fd td:last-child{border-bottom:none}
   #tabla tr.fd td::before{content:attr(data-label);font-weight:600;font-size:.7rem;color:var(--mt);text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
-  /* UMA + Ref. en el mismo renglón */
-  #tabla tr.fd td.cu,
-  #tabla tr.fd td.cr{
-    display:inline-flex;width:50%;box-sizing:border-box;
-    flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:6px 8px;border-bottom:none;gap:2px;
-    vertical-align:top;
-  }
-  #tabla tr.fd td.cr{border-bottom:1px solid var(--brd)}
-  #tabla tr.fd td.cu::before,
-  #tabla tr.fd td.cr::before{font-size:.65rem;flex-shrink:0}
+  /* REF. incluida en el label de UMA – celda Ref. oculta en mobile */
+  #tabla tr.fd td.cr{display:none}
+  #tabla tr.fd td.cu::before{font-size:.65rem}
   .btot{display:none}
   .abtn span{display:none}
   .star{float:none;margin-left:0;font-size:1.1rem}
@@ -802,7 +794,7 @@ function renderTabla(){
       +'<td class="cg" data-label="">'
       +'<button class="'+starCls+'" onclick="toggleFavIdx('+i+')" title="'+starTip+'">'+(esFav?'★':'☆')+'</button>'
       +esc(it.g)+'</td>'
-      +'<td class="cu" data-label="UMA">'+esc(umaStr)+'</td>'
+      +'<td class="cu" data-label="UMA'+(it.r ? ' ('+it.r+')' : '')+'">'+esc(umaStr)+'</td>'
       +'<td class="cr" data-label="Ref.">'+esc(it.r||'')+'</td>'
       +'<td class="cp" data-label="En pesos">'+pesosStr+'</td>'
       +'</tr>';
