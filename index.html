@@ -187,10 +187,34 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
   #tabla tr.fd td:first-child::before{display:none}
   #tabla tr.fd td:last-child{border-bottom:none}
   #tabla tr.fd td::before{content:attr(data-label);font-weight:600;font-size:.7rem;color:var(--mt);text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
+  /* UMA + Ref. en el mismo renglón */
+  #tabla tr.fd td.cu,
+  #tabla tr.fd td.cr{
+    display:inline-flex;width:50%;box-sizing:border-box;
+    flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:6px 8px;border-bottom:none;gap:2px;
+    vertical-align:top;
+  }
+  #tabla tr.fd td.cr{border-bottom:1px solid var(--brd)}
+  #tabla tr.fd td.cu::before,
+  #tabla tr.fd td.cr::before{font-size:.65rem;flex-shrink:0}
   .btot{display:none}
   .abtn span{display:none}
   .star{float:none;margin-left:0;font-size:1.1rem}
 }
+
+/* ── BOTÓN SUBIR AL INICIO ── */
+#btnTop{
+  position:fixed;bottom:22px;right:18px;z-index:200;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--az2);color:#fff;border:none;
+  font-size:1.3rem;line-height:1;cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.35);
+  display:none;align-items:center;justify-content:center;
+  transition:opacity .2s;
+}
+#btnTop.show{display:flex}
+#btnTop:hover{opacity:.85}
 
 /* ── PRINT ── */
 @media print{
@@ -354,6 +378,8 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
   Consejo de Abogados y Procuradores de Resistencia &nbsp;·&nbsp;
   1ª Circunscripción Judicial del Chaco &nbsp;·&nbsp; Ley 4228-C
 </footer>
+
+<button id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver al inicio">↑</button>
 
 <script>
 /* ════════════════════════════════════════════════
@@ -1018,6 +1044,12 @@ window.onload = function(){
   /* Banner y PWA */
   checkBanner();
   setupPWA();
+
+  /* Botón subir */
+  window.addEventListener('scroll', function(){
+    var b = document.getElementById('btnTop');
+    if(b) b.className = window.scrollY > 320 ? 'show' : '';
+  }, {passive:true});
 };
 </script>
 </body>
