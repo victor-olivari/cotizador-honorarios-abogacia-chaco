@@ -941,7 +941,14 @@ var deferredInstall = null;
 
 function setupPWA(){
   if('serviceWorker' in navigator && location.protocol !== 'file:'){
-    navigator.serviceWorker.register('./sw.js').catch(function(){});
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      reg.update(); /* chequear nueva versión en cada apertura */
+    }).catch(function(){});
+    /* Cuando el nuevo SW toma control (skipWaiting), recargar una vez */
+    var refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function(){
+      if(!refreshing){ refreshing = true; window.location.reload(); }
+    });
   }
   /* Android Chrome: prompt de instalación nativo */
   window.addEventListener('beforeinstallprompt', function(e){
