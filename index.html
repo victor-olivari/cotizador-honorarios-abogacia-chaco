@@ -985,12 +985,14 @@ function triggerInstall(){
       +'<li>Confirmá tocando <strong>Instalar</strong></li>'
       +'</ol>';
   } else {
-    html = '<ol>'
-      +'<li>En la barra de dirección de Chrome mirá el extremo derecho — aparece un ícono de <strong>monitor con flecha ⊕</strong></li>'
-      +'<li>Hacé clic ahí → <strong>Instalar</strong></li>'
-      +'</ol>'
-      +'<p class="inote">Si no ves ese ícono: menú <strong>⋮</strong> → <strong>"Instalar Honorarios Mínimos…"</strong><br>'
-      +'Si tampoco aparece, cerrá Chrome completamente y volvé a abrir la página.</p>';
+    html = '<p style="font-size:.88rem;color:var(--ng);margin-bottom:10px">Si el ícono de instalación no aparece en Chrome, es probable que la app haya quedado registrada como instalada aunque no la veas en el dock.</p>'
+      +'<ol>'
+      +'<li>En Chrome escribí <strong>chrome://apps</strong> en la barra de dirección y presioná Enter</li>'
+      +'<li>Buscá <strong>"Honorarios Mínimos"</strong> o <strong>"Honorarios Chaco"</strong></li>'
+      +'<li>Hacé clic derecho → <strong>"Eliminar de Chrome"</strong></li>'
+      +'<li>Cerrá Chrome completamente y volvé a abrir esta página</li>'
+      +'<li>Ahora debería aparecer el ícono <strong>⊕</strong> en la barra de dirección para instalar</li>'
+      +'</ol>';
   }
   document.getElementById('instContenido').innerHTML = html;
   document.getElementById('instModal').className = 'show';
