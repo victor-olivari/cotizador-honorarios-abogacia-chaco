@@ -74,6 +74,14 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 .iosBox ol{padding-left:20px;color:var(--ng);font-size:.9rem;line-height:2.1}
 .iosBox li strong{color:var(--az2)}
 .iosCerrar{color:var(--mt);font-size:.82rem;background:none;border:none;cursor:pointer;font-family:inherit;margin-top:14px;padding:6px 0;display:block;width:100%;text-align:center}
+#instModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
+#instModal.show{display:flex}
+.instBox{background:var(--bl);border-radius:12px;padding:22px 20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.instBox h3{font-size:1rem;margin-bottom:12px;color:var(--ng)}
+.instBox ol{padding-left:20px;color:var(--ng);font-size:.88rem;line-height:2.1}
+.instBox ol li strong{color:var(--az2)}
+.instBox .inote{font-size:.78rem;color:var(--mt);margin-top:10px;line-height:1.6}
+.instCerrar{width:100%;padding:10px;border:none;border-radius:var(--rd);background:var(--az2);color:#fff;font-size:.9rem;cursor:pointer;font-family:inherit;margin-top:16px;font-weight:600}
 
 /* ── HEADER ── */
 header{background:var(--az);color:#fff;padding:15px 18px 13px}
@@ -261,6 +269,15 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
       <li>Confirme tocando <strong>"Agregar"</strong></li>
     </ol>
     <button class="iosCerrar" id="iosCerrar">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL INSTALAR (guía general) -->
+<div id="instModal">
+  <div class="instBox">
+    <h3>📥 Instalar la aplicación</h3>
+    <div id="instContenido"></div>
+    <button class="instCerrar" id="instCerrar">Cerrar</button>
   </div>
 </div>
 
@@ -929,32 +946,54 @@ function setupPWA(){
       if(!refreshing){ refreshing = true; window.location.reload(); }
     });
   }
-  /* Android Chrome: prompt de instalación nativo */
+  /* Guardar prompt nativo si Chrome lo ofrece */
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     deferredInstall = e;
-    var btn = document.getElementById('btnInstall');
-    if(btn){ btn.style.display='inline-flex'; btn.onclick = triggerInstall; }
   });
-  /* iOS Safari: instrucciones manuales */
-  var ua = navigator.userAgent || '';
-  var isIOS = /iPhone|iPad|iPod/i.test(ua);
-  var isStandalone = window.navigator.standalone === true;
-  var isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua) && !/CriOS/i.test(ua);
-  if(isIOS && !isStandalone && isSafari){
-    var btn = document.getElementById('btnInstall');
-    if(btn){ btn.style.display='inline-flex'; btn.onclick = mostrarModalIOS; }
-  }
 }
 
 function triggerInstall(){
-  if(!deferredInstall) return;
-  deferredInstall.prompt();
-  deferredInstall.userChoice.then(function(){
-    deferredInstall = null;
-    var btn = document.getElementById('btnInstall');
-    if(btn) btn.style.display='none';
-  });
+  if(deferredInstall){
+    /* Chrome ofrece instalación nativa */
+    deferredInstall.prompt();
+    deferredInstall.userChoice.then(function(r){
+      deferredInstall = null;
+      if(r.outcome === 'accepted'){
+        var btn = document.getElementById('btnInstall');
+        if(btn) btn.style.display='none';
+      }
+    });
+    return;
+  }
+  /* Sin prompt nativo: mostrar guía por plataforma */
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/i.test(ua);
+  var isAndroid = /Android/i.test(ua);
+  var html = '';
+  if(isIOS){
+    html = '<ol>'
+      +'<li>Abrí <strong>Safari</strong> (no Chrome ni otro)</li>'
+      +'<li>Tocá el botón <strong>Compartir ↑</strong> en la barra inferior</li>'
+      +'<li>Tocá <strong>"Agregar a pantalla de inicio"</strong></li>'
+      +'<li>Tocá <strong>"Agregar"</strong></li>'
+      +'</ol>';
+  } else if(isAndroid){
+    html = '<ol>'
+      +'<li>Tocá los <strong>tres puntos ⋮</strong> de Chrome</li>'
+      +'<li>Tocá <strong>"Instalar aplicación"</strong> o <strong>"Agregar a pantalla de inicio"</strong></li>'
+      +'<li>Confirmá tocando <strong>Instalar</strong></li>'
+      +'</ol>';
+  } else {
+    html = '<ol>'
+      +'<li>En la barra de dirección de Chrome mirá el extremo derecho — aparece un ícono de <strong>monitor con flecha ⊕</strong></li>'
+      +'<li>Hacé clic ahí → <strong>Instalar</strong></li>'
+      +'</ol>'
+      +'<p class="inote">Si no ves ese ícono: menú <strong>⋮</strong> → <strong>"Instalar Honorarios Mínimos…"</strong><br>'
+      +'Si tampoco aparece, cerrá Chrome completamente y volvé a abrir la página.</p>';
+  }
+  document.getElementById('instContenido').innerHTML = html;
+  document.getElementById('instModal').className = 'show';
 }
 
 function mostrarModalIOS(){ document.getElementById('iosModal').className='show'; }
@@ -1018,10 +1057,24 @@ window.onload = function(){
   document.getElementById('iosModal').addEventListener('click', function(e){
     if(e.target===this) document.getElementById('iosModal').className='';
   });
+  document.getElementById('instCerrar').addEventListener('click', function(){
+    document.getElementById('instModal').className='';
+  });
+  document.getElementById('instModal').addEventListener('click', function(e){
+    if(e.target===this) document.getElementById('instModal').className='';
+  });
 
   /* Banner y PWA */
   checkBanner();
   setupPWA();
+
+  /* Botón Instalar: visible siempre si no está en modo standalone */
+  var yaInstalada = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+  if(!yaInstalada){
+    var btnInst = document.getElementById('btnInstall');
+    if(btnInst){ btnInst.style.display='inline-flex'; btnInst.onclick=triggerInstall; }
+  }
 
   /* Botón subir */
   window.addEventListener('scroll', function(){
