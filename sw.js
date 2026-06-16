@@ -1,5 +1,5 @@
 /* Service Worker — Honorarios Mínimos Ley 4228-C Chaco */
-const CACHE = 'honorarios-4228c-v3';
+const CACHE = 'honorarios-4228c-v4';
 const STATIC = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -9,11 +9,19 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+    caches.keys().then(keys => {
+      const old = keys.filter(k => k !== CACHE);
+      return Promise.all(old.map(k => caches.delete(k)))
+        .then(() => self.clients.claim())
+        .then(() => {
+          /* Si había versión anterior, recargar todas las ventanas abiertas.
+             client.navigate() funciona incluso en páginas sin listener propio. */
+          if (old.length === 0) return;
+          return self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then(clients => clients.forEach(c => c.navigate(c.url)));
+        });
+    })
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
