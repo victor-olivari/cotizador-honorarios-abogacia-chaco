@@ -937,8 +937,8 @@ var deferredInstall = null;
 
 function setupPWA(){
   if('serviceWorker' in navigator && location.protocol !== 'file:'){
-    navigator.serviceWorker.register('./sw.js').then(function(reg){
-      reg.update(); /* chequear nueva versión en cada apertura */
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function(reg){
+      reg.update();
     }).catch(function(){});
     /* Cuando el nuevo SW toma control (skipWaiting), recargar una vez */
     var refreshing = false;
