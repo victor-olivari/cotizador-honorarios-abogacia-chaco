@@ -77,21 +77,9 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 
 /* ── HEADER ── */
 header{background:var(--az);color:#fff;padding:15px 18px 13px}
-.hi{display:flex;align-items:flex-start;gap:12px;max-width:1100px;margin:0 auto}
-.bal{flex-shrink:0;width:42px;height:46px}
-.ht{flex:1;min-width:0}
-.ht h1{font-size:clamp(.87rem,3.5vw,1.25rem);font-weight:700;line-height:1.25}
-.ht p{font-size:clamp(.72rem,2.4vw,.82rem);opacity:.82;margin-top:3px}
-
-/* ── BOTÓN TEMA ── */
-.thmbtn{
-  flex-shrink:0;background:rgba(255,255,255,.15);border:none;
-  border-radius:var(--rd);padding:6px 10px;font-size:1.1rem;
-  cursor:pointer;color:#fff;align-self:center;
-  transition:background .15s;
-}
-.thmbtn:hover{background:rgba(255,255,255,.28)}
-.thmbtn:active{background:rgba(255,255,255,.4)}
+.hi{max-width:1100px;margin:0 auto}
+.hi h1{font-size:clamp(.95rem,3.5vw,1.3rem);font-weight:700;line-height:1.25}
+.hi p{font-size:clamp(.75rem,2.4vw,.85rem);opacity:.82;margin-top:4px}
 
 /* ── PANEL UMA ── */
 .up{background:var(--bl);border-bottom:1px solid var(--brd);padding:13px 18px}
@@ -194,10 +182,6 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
   .btot{display:none}
   .abtn span{display:none}
   .star{float:none;margin-left:0;font-size:1.1rem}
-  /* Header: ícono balanza pasa a la derecha del botón tema */
-  .hi{align-items:center}
-  .bal{order:2;width:24px;height:26px}
-  .thmbtn{order:1}
   /* Barra búsqueda: más espacio al buscador, menos al filtro */
   .sw{flex:2 1 0;min-width:0}
   .cin select{flex:1 1 0;max-width:none;min-width:0;font-size:.78rem}
@@ -283,22 +267,8 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
 <!-- CABECERA -->
 <header>
   <div class="hi">
-    <svg class="bal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 60" fill="none" aria-label="Balanza de la Justicia">
-      <rect x="19" y="52" width="16" height="5" rx="2.5" fill="rgba(255,255,255,.9)"/>
-      <rect x="25.2" y="12" width="3.6" height="40" fill="rgba(255,255,255,.9)"/>
-      <rect x="4" y="11" width="46" height="4" rx="2" fill="white"/>
-      <circle cx="27" cy="10" r="4" fill="white"/>
-      <circle cx="27" cy="10" r="2" fill="rgba(26,60,110,.6)"/>
-      <line x1="9.5" y1="15" x2="6.5" y2="34" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="44.5" y1="15" x2="47.5" y2="34" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M1.5,34 Q7,43 12.5,34" stroke="white" stroke-width="2.2" fill="rgba(255,255,255,.18)" stroke-linecap="round"/>
-      <path d="M41.5,34 Q47,43 52.5,34" stroke="white" stroke-width="2.2" fill="rgba(255,255,255,.18)" stroke-linecap="round"/>
-    </svg>
-    <div class="ht">
-      <h1>CONSULTA DE HONORARIOS MÍNIMOS DE LA ABOGACÍA EN EL CHACO</h1>
-      <p>Nueva Ley de Honorarios Profesionales de la Abogacía &nbsp;·&nbsp; <strong>Ley 4228-C</strong></p>
-    </div>
-    <button id="btnTheme" class="thmbtn" title="Cambiar tema">💻</button>
+    <h1>CONSULTA DE HONORARIOS MÍNIMOS DE LA ABOGACÍA EN EL CHACO</h1>
+    <p>Nueva Ley de Honorarios Profesionales de la Abogacía &nbsp;·&nbsp; <strong>Ley 4228-C</strong></p>
   </div>
 </header>
 
@@ -318,6 +288,7 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
       <a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank" rel="noopener" class="abtn">🔗 <span>Valor oficial CSJN</span></a>
       <button class="abtn abtnp" id="btnPrint">🖨 <span>Imprimir / PDF</span></button>
       <button class="abtn abtnw" id="btnWA">📲 <span>Compartir por WhatsApp</span></button>
+      <button class="abtn thmbtn" id="btnTheme" title="Cambiar tema">💻</button>
       <button class="abtn abtni" id="btnInstall">📥 <span>Instalar app</span></button>
     </div>
   </div>
