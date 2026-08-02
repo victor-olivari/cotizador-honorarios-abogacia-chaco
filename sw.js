@@ -1,6 +1,6 @@
 /* Service Worker — Honorarios Mínimos Ley 4228-C Chaco */
-const CACHE = 'honorarios-4228c-v5';
-const STATIC = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE = 'honorarios-4228c-v6';
+const STATIC = ['./', './index.html', './instalar.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)));

@@ -54,6 +54,17 @@ ol.steps li:last-child{margin-bottom:0}
 .divider span{background:var(--bg);padding:0 10px;position:relative}
 
 footer{background:var(--az);color:rgba(255,255,255,.6);font-size:.74rem;text-align:center;padding:14px 18px}
+.fvolver{display:block;color:rgba(255,255,255,.92);font-size:.82rem;margin-bottom:8px;text-decoration:underline}
+
+/* Modo oscuro: seguimos la preferencia del sistema, igual que la app */
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0F172A;--ng:#E2E8F0;--mt:#94A3B8;--brd:#334155;--bl:#1E293B;--az:#1E293B;--az2:#3B82F6}
+  body{color-scheme:dark}
+  .tip{background:#1E3A5F;color:#DBEAFE}
+  .tip strong{color:#DBEAFE}
+  .url-box{background:#14532D;border-color:#166534}
+  .url-box p,.url-box a{color:#86EFAC}
+}
 
 @media print{
   body{font-size:11pt}
@@ -219,6 +230,20 @@ footer{background:var(--az);color:rgba(255,255,255,.6);font-size:.74rem;text-ali
             Sí, igual que cualquier app: mantener presionado el ícono y elegir "Eliminar" (Android) o "Quitar de la pantalla de inicio" (iOS).
           </div>
         </li>
+        <li>
+          <div class="step-num" style="background:#059669">✓</div>
+          <div class="step-txt">
+            <strong>¿Es gratis? ¿Tiene publicidad?</strong><br>
+            Es totalmente gratuita, sin publicidad, sin registro y sin cuenta de usuario. No se descarga de ninguna tienda ni pide permisos del teléfono.
+          </div>
+        </li>
+        <li>
+          <div class="step-num" style="background:#059669">✓</div>
+          <div class="step-txt">
+            <strong>¿Por qué no está en Play Store ni en App Store?</strong><br>
+            Porque no hace falta. Instalada desde el navegador queda igual: ícono propio, pantalla completa y sin barras. Además, así se actualiza sola — sin esperar aprobaciones de tienda.
+          </div>
+        </li>
       </ol>
     </div>
   </div>
@@ -226,6 +251,7 @@ footer{background:var(--az);color:rgba(255,255,255,.6);font-size:.74rem;text-ali
 </div>
 
 <footer>
+  <a class="fvolver" href="./">← Volver al consultador de honorarios</a>
   Consejo de Abogados y Procuradores de Resistencia &nbsp;·&nbsp;
   1ª Circunscripción Judicial del Chaco &nbsp;·&nbsp; Ley 4228-C
 </footer>

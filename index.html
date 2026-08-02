@@ -82,6 +82,8 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 .iosBox h3{font-size:1rem;margin-bottom:12px;color:var(--ng)}
 .iosBox ol{padding-left:20px;color:var(--ng);font-size:.9rem;line-height:2.1}
 .iosBox li strong{color:var(--az2)}
+.iosBox .inote{font-size:.78rem;color:var(--mt);margin-top:10px;line-height:1.6}
+.iosBox .inote a{color:var(--az2)}
 .iosCerrar{color:var(--mt);font-size:.82rem;background:none;border:none;cursor:pointer;font-family:inherit;margin-top:14px;padding:6px 0;display:block;width:100%;text-align:center}
 #instModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
 #instModal.show{display:flex}
@@ -90,6 +92,7 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 .instBox ol{padding-left:20px;color:var(--ng);font-size:.88rem;line-height:2.1}
 .instBox ol li strong{color:var(--az2)}
 .instBox .inote{font-size:.78rem;color:var(--mt);margin-top:10px;line-height:1.6}
+.instBox .inote a{color:var(--az2)}
 .instCerrar{width:100%;padding:10px;border:none;border-radius:var(--rd);background:var(--az2);color:#fff;font-size:.9rem;cursor:pointer;font-family:inherit;margin-top:16px;font-weight:600}
 
 /* ── HEADER ── */
@@ -178,6 +181,8 @@ td.cp{text-align:right;font-weight:700;white-space:nowrap}
 .av{background:var(--bl);border:1px solid var(--brd);border-left:4px solid var(--az2);border-radius:var(--rd);padding:15px 17px;font-size:.81rem;color:var(--mt);line-height:1.7}
 .av strong{color:var(--ng)}
 footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-align:center;padding:12px 18px}
+footer a{color:rgba(255,255,255,.9);text-decoration:underline}
+.fguia{display:block;margin-top:7px}
 
 /* ── MOBILE: tabla → tarjetas ── */
 @media(max-width:599px){
@@ -271,12 +276,16 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
 <!-- MODAL INSTALAR iOS -->
 <div id="iosModal">
   <div class="iosBox">
-    <h3>Instalar en pantalla de inicio</h3>
+    <h3>📲 Tenga la app en su iPhone</h3>
     <ol>
-      <li>Toque el ícono <strong>Compartir ↑</strong> en Safari</li>
+      <li>Toque el ícono <strong>Compartir ↑</strong> abajo, en <strong>Safari</strong></li>
       <li>Desplácese y toque <strong>"Agregar a la pantalla de inicio"</strong></li>
       <li>Confirme tocando <strong>"Agregar"</strong></li>
     </ol>
+    <p class="inote">Queda con ícono propio, se abre a pantalla completa y funciona sin
+    internet. Es gratis y no ocupa casi espacio.<br>
+    Importante: en iPhone la opción sólo aparece en <strong>Safari</strong>, no en Chrome.<br>
+    <a href="instalar.html">Ver guía completa con imágenes</a></p>
     <button class="iosCerrar" id="iosCerrar">Cerrar</button>
   </div>
 </div>
@@ -304,7 +313,7 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
     <div class="ur">
       <span class="ul">Valor UMA ($)</span>
       <div class="uiw">
-        <input type="number" id="valorUMA" value="98112" min="1" step="1" inputmode="numeric">
+        <input type="number" id="valorUMA" value="100173" min="1" step="1" inputmode="numeric">
         <button class="ufbtn" id="btnFetch">↻ Consultar CSJN</button>
       </div>
       <span id="umaBadge" class="badge ba">⚠ Último valor conocido</span>
@@ -374,6 +383,7 @@ footer{background:var(--az);color:rgba(255,255,255,.65);font-size:.74rem;text-al
 <footer>
   Consejo de Abogados y Procuradores de Resistencia &nbsp;·&nbsp;
   1ª Circunscripción Judicial del Chaco &nbsp;·&nbsp; Ley 4228-C
+  <a class="fguia" href="instalar.html">📱 ¿Cómo instalar la app en el celular?</a>
 </footer>
 
 <button id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver al inicio">↑</button>
@@ -599,16 +609,18 @@ var D=[
 /* ════════════════════════════════════════════════
    UMA — ESTADO GLOBAL
    ════════════════════════════════════════════════ */
-var UMA_FALLBACK = 98112;
-var UMA_RES      = "Res. SGA N° 1352/2026";
-var UMA_VIG      = "1° de abril de 2026";
+var UMA_FALLBACK = 100173;
+var UMA_RES      = "Res. SGA N° 1718/2026";
+var UMA_VIG      = "1° de mayo de 2026";
 var UMA_JSON_URL = "https://raw.githubusercontent.com/victor-olivari/cotizador-honorarios-abogacia-chaco/main/uma-data.json";
-var CK  = 'uma_4228c_v6';
+var CK  = 'uma_4228c_v7';
 var TTL = 12*60*60*1000;
 
 /* ── HELPERS ── */
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function fmtP(n){ return '$ '+Math.round(n).toLocaleString('es-AR'); }
+/* El PDF de la CSJN dice "a partir del primero de mayo": lo normalizamos a "1° de mayo" */
+function fmtVig(v){ return String(v||'').replace(/^primero\s+de\s+/i, '1° de '); }
 function getUMA(){
   var v = parseFloat(document.getElementById('valorUMA').value);
   return (!isNaN(v) && v > 0) ? v : UMA_FALLBACK;
@@ -678,7 +690,7 @@ function mostrarUMA(o, estado){
   if(o && o.valor) inp.value = o.valor;
   var val = Math.round(getUMA()).toLocaleString('es-AR');
   var res = (o && o.res) || UMA_RES;
-  var vig = (o && o.vig) || UMA_VIG;
+  var vig = fmtVig((o && o.vig) || UMA_VIG);
   var msgs = {
     ok:       '✓ Actualizado desde CSJN',
     cache:    '✓ Verificado recientemente (caché)',
@@ -699,31 +711,34 @@ function mostrarUMA(o, estado){
 /* ════════════════════════════════════════════════
    FETCH UMA — 3 niveles
    ════════════════════════════════════════════════ */
-function fetchUMA(){
-  if(location.protocol === 'file:'){
-    mostrarUMA(null, 'error');
-    var st = document.getElementById('umaSt');
-    if(st) st.innerHTML +=
-      '<br><small style="color:var(--ga)">⚠ Archivo local (file://) – el navegador bloquea conexiones externas. '+
-      'Ingrese el valor manualmente o visítelo en '+
-      '<a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank">csjn.gov.ar/transparencia/uma</a></small>';
-    return;
-  }
+/* Aviso sólo para el caso file://: se muestra recién si la consulta falló */
+function avisoLocal(){
+  if(location.protocol !== 'file:') return;
+  var st = document.getElementById('umaSt');
+  if(st) st.innerHTML +=
+    '<br><small style="color:var(--ga)">⚠ Archivo local (file://) – el navegador puede bloquear la conexión. '+
+    'Ingrese el valor manualmente, abra la versión en línea o visite '+
+    '<a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank">csjn.gov.ar/transparencia/uma</a></small>';
+}
+
+function fetchUMA(silencioso){
   var btn = document.getElementById('btnFetch');
-  btn.disabled = true;
-  btn.textContent = 'Consultando…';
+  if(!silencioso){
+    btn.disabled = true;
+    btn.textContent = 'Consultando…';
+  }
   var done = false;
-  var safeTimer = setTimeout(function(){
-    if(!done){ done=true; btn.disabled=false; btn.textContent='↻ Consultar CSJN';
-      mostrarUMA(loadCache()||null, 'error'); }
-  }, 12000);
   function fin(o, estado){
     if(done) return; done=true;
     clearTimeout(safeTimer);
     btn.disabled=false; btn.textContent='↻ Consultar CSJN';
     if(o) saveCache(o);
+    /* En modo silencioso no degradamos la vista si falla: dejamos el valor ya mostrado */
+    if(silencioso && estado === 'error') return;
     mostrarUMA(o||loadCache()||null, estado);
+    if(estado === 'error') avisoLocal();
   }
+  var safeTimer = setTimeout(function(){ fin(null, 'error'); }, 12000);
   function xhrGet(url, timeout, cb){
     var x = new XMLHttpRequest();
     var timedOut = false;
@@ -979,15 +994,10 @@ function triggerInstall(){
   var ua = navigator.userAgent || '';
   var isIOS = /iPhone|iPad|iPod/i.test(ua);
   var isAndroid = /Android/i.test(ua);
+  /* En iPhone la guía propia es la del modal iOS */
+  if(isIOS){ mostrarModalIOS(); return; }
   var html = '';
-  if(isIOS){
-    html = '<ol>'
-      +'<li>Abrí <strong>Safari</strong> (no Chrome ni otro)</li>'
-      +'<li>Tocá el botón <strong>Compartir ↑</strong> en la barra inferior</li>'
-      +'<li>Tocá <strong>"Agregar a pantalla de inicio"</strong></li>'
-      +'<li>Tocá <strong>"Agregar"</strong></li>'
-      +'</ol>';
-  } else if(isAndroid){
+  if(isAndroid){
     html = '<ol>'
       +'<li>Tocá los <strong>tres puntos ⋮</strong> de Chrome</li>'
       +'<li>Tocá <strong>"Instalar aplicación"</strong> o <strong>"Agregar a pantalla de inicio"</strong></li>'
@@ -1003,11 +1013,29 @@ function triggerInstall(){
       +'<li>Ahora debería aparecer el ícono <strong>⊕</strong> en la barra de dirección para instalar</li>'
       +'</ol>';
   }
+  html += '<p class="inote"><a href="instalar.html">Ver la guía completa de instalación</a></p>';
   document.getElementById('instContenido').innerHTML = html;
   document.getElementById('instModal').className = 'show';
 }
 
+var IOS_TIP_KEY = 'ios_tip_4228c';
+
+/* Safari real en iPhone/iPad (excluye Chrome/Firefox iOS y navegadores embebidos) */
+function esSafariIOS(){
+  var ua = navigator.userAgent || '';
+  var esIOS = /iPhone|iPod/i.test(ua) ||
+              (/iPad/i.test(ua)) ||
+              (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  if(!esIOS) return false;
+  if(/CriOS|FxiOS|EdgiOS|OPiOS|WhatsApp|FBAN|FBAV|FB_IAB|Instagram/i.test(ua)) return false;
+  return /Safari\//i.test(ua);
+}
+
 function mostrarModalIOS(){ document.getElementById('iosModal').className='show'; }
+function cerrarModalIOS(){
+  document.getElementById('iosModal').className='';
+  try{ localStorage.setItem(IOS_TIP_KEY, '1'); }catch(e){}
+}
 
 /* ════════════════════════════════════════════════
    INICIO
@@ -1036,6 +1064,10 @@ window.onload = function(){
   var cached = loadCache();
   mostrarUMA(cached || null, cached ? 'cache' : 'fallback');
 
+  /* Sin caché fresco: consultamos solos, para que nadie tenga que cliquear
+     el botón para ver el valor vigente. Si falla, queda el último conocido. */
+  if(!cached) setTimeout(function(){ fetchUMA(true); }, 300);
+
   /* Listeners UMA y búsqueda */
   document.getElementById('valorUMA').addEventListener('change', function(){
     mostrarUMA(null,'manual');
@@ -1048,7 +1080,7 @@ window.onload = function(){
   startPolling();
 
   /* Botones */
-  document.getElementById('btnFetch').addEventListener('click',  fetchUMA);
+  document.getElementById('btnFetch').addEventListener('click',  function(){ fetchUMA(); });
   document.getElementById('btnPrint').addEventListener('click',  function(){ window.print(); });
   document.getElementById('btnWA').addEventListener('click',     mostrarModal);
   document.getElementById('btnTheme').addEventListener('click',  cycleTheme);
@@ -1062,11 +1094,9 @@ window.onload = function(){
   });
 
   /* Modal iOS install */
-  document.getElementById('iosCerrar').addEventListener('click', function(){
-    document.getElementById('iosModal').className='';
-  });
+  document.getElementById('iosCerrar').addEventListener('click', cerrarModalIOS);
   document.getElementById('iosModal').addEventListener('click', function(e){
-    if(e.target===this) document.getElementById('iosModal').className='';
+    if(e.target===this) cerrarModalIOS();
   });
   document.getElementById('instCerrar').addEventListener('click', function(){
     document.getElementById('instModal').className='';
@@ -1085,6 +1115,12 @@ window.onload = function(){
   if(!yaInstalada){
     var btnInst = document.getElementById('btnInstall');
     if(btnInst){ btnInst.style.display='inline-flex'; btnInst.onclick=triggerInstall; }
+  }
+
+  /* iPhone/iPad en Safari: Apple no ofrece prompt nativo, así que sugerimos
+     una sola vez cómo agregarla a la pantalla de inicio. */
+  if(!yaInstalada && esSafariIOS() && !localStorage.getItem(IOS_TIP_KEY)){
+    setTimeout(mostrarModalIOS, 2500);
   }
 
   /* Botón subir */
