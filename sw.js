@@ -1,6 +1,28 @@
-/* Service Worker — Honorarios Mínimos Ley 4228-C Chaco */
-const CACHE = 'honorarios-4228c-v6';
-const STATIC = ['./', './index.html', './instalar.html', './manifest.json', './icon-192.png', './icon-512.png'];
+/* Service Worker - Honorarios Minimos Ley 4228-C Chaco */
+const CACHE = 'honorarios-chaco-v2026-08-logo-refresh';
+const STATIC = [
+  './',
+  './index.html',
+  './instalar.html',
+  './manifest.json',
+  './uma-data.json',
+  './favicon.ico',
+  './icon-16.png',
+  './icon-32.png',
+  './icon-48.png',
+  './icon-72.png',
+  './icon-96.png',
+  './icon-128.png',
+  './icon-144.png',
+  './icon-152.png',
+  './icon-192.png',
+  './icon-384.png',
+  './icon-512.png',
+  './icon-maskable-192.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
+  './browserconfig.xml'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)));
@@ -25,6 +47,8 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+
   const url = e.request.url;
 
   /* UMA data: red-first (datos frescos), cache como respaldo offline */
@@ -37,6 +61,19 @@ self.addEventListener('fetch', e => {
           return r;
         })
         .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then(r => {
+          const copy = r.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+          return r;
+        })
+        .catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
     );
     return;
   }
