@@ -7,18 +7,26 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Honorarios Chaco">
+<meta name="application-name" content="Honorarios Chaco">
+<meta name="msapplication-TileColor" content="#1A3C6E">
+<meta name="msapplication-TileImage" content="icon-144.png">
+<meta name="msapplication-config" content="browserconfig.xml">
 <link rel="manifest" href="manifest.json">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <meta property="og:title" content="Honorarios Mínimos – Ley 4228-C – Chaco">
 <meta property="og:description" content="Consultá honorarios mínimos de la abogacía en el Chaco según la nueva Ley 4228-C. Rápido, oficial y sin conexión.">
-<meta property="og:image" content="https://victor-olivari.github.io/cotizador-honorarios-abogacia-chaco/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="https://victor-olivari.github.io/cotizador-honorarios-abogacia-chaco/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://victor-olivari.github.io/cotizador-honorarios-abogacia-chaco/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://victor-olivari.github.io/cotizador-honorarios-abogacia-chaco/og-image.png">
+<meta name="twitter:image" content="https://victor-olivari.github.io/cotizador-honorarios-abogacia-chaco/icon-512.png">
 <title>Honorarios Mínimos – Ley 4228-C – Chaco</title>
 <style>
 /* ── VARS MODO CLARO ── */
@@ -94,6 +102,17 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 .instBox .inote{font-size:.78rem;color:var(--mt);margin-top:10px;line-height:1.6}
 .instBox .inote a{color:var(--az2)}
 .instCerrar{width:100%;padding:10px;border:none;border-radius:var(--rd);background:var(--az2);color:#fff;font-size:.9rem;cursor:pointer;font-family:inherit;margin-top:16px;font-weight:600}
+#updateModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:20px}
+#updateModal.show{display:flex}
+.updateBox{background:var(--bl);border-radius:12px;padding:22px 20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.updateBox h3{font-size:1rem;margin-bottom:10px;color:var(--ng)}
+.updateBox p{font-size:.88rem;color:var(--ng);line-height:1.65;margin-bottom:10px}
+.updateBox .inote{font-size:.78rem;color:var(--mt);line-height:1.6;margin-top:9px}
+.updateActions{display:flex;gap:8px;margin-top:16px}
+.updateBtn{flex:1;padding:10px;border:none;border-radius:var(--rd);font-size:.9rem;cursor:pointer;font-family:inherit;font-weight:700}
+.updatePrimary{background:var(--az2);color:#fff}
+.updateSecondary{background:var(--bg);color:var(--mt);border:1px solid var(--brd)}
+.updateBtn:disabled{opacity:.65;cursor:wait}
 
 /* ── HEADER ── */
 header{background:var(--az);color:#fff;padding:15px 18px 13px}
@@ -225,7 +244,7 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
 /* ── PRINT ── */
 @media print{
   @page{margin:1.5cm;size:A4}
-  #banner,.uacts,.ufbtn,.sw,.cin select,.btot,#waModal,#iosModal{display:none!important}
+  #banner,.uacts,.ufbtn,.sw,.cin select,.btot,#waModal,#iosModal,#instModal,#updateModal{display:none!important}
   header{background:var(--az)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .tscroll{overflow:visible}
   #tabla{min-width:unset!important;font-size:9pt;border:1px solid #999;display:table!important}
@@ -296,6 +315,19 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
     <h3>📥 Instalar la aplicación</h3>
     <div id="instContenido"></div>
     <button class="instCerrar" id="instCerrar">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL ACTUALIZAR LOGO -->
+<div id="updateModal">
+  <div class="updateBox">
+    <h3>Actualizar aplicación</h3>
+    <p>Hay una versión nueva con el logo actualizado. Toque <strong>Actualizar</strong> para limpiar la versión anterior y volver a abrir la app.</p>
+    <p class="inote">Si el ícono de la pantalla de inicio no cambia después de esto, quite el acceso directo viejo y agréguelo nuevamente desde Safari o Chrome.</p>
+    <div class="updateActions">
+      <button class="updateBtn updatePrimary" id="btnUpdateNow">Actualizar</button>
+      <button class="updateBtn updateSecondary" id="btnUpdateLater">Luego</button>
+    </div>
   </div>
 </div>
 
@@ -958,6 +990,15 @@ function cerrarModal(){ document.getElementById('waModal').className=''; }
    PWA — Service Worker + Instalar
    ════════════════════════════════════════════════ */
 var deferredInstall = null;
+var APP_ASSET_VERSION = 'logo-2026-08-02';
+var APP_UPDATE_KEY = 'app_asset_version_seen';
+
+function esCelular(){
+  var ua = navigator.userAgent || '';
+  return /Mobi|Mobile|Android|iPhone|iPod/i.test(ua) ||
+         (/iPad/i.test(ua)) ||
+         (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+}
 
 function setupPWA(){
   if('serviceWorker' in navigator && location.protocol !== 'file:'){
@@ -974,6 +1015,55 @@ function setupPWA(){
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     deferredInstall = e;
+  });
+}
+
+function mostrarModalActualizacion(){
+  var modal = document.getElementById('updateModal');
+  if(modal) modal.className = 'show';
+}
+
+function cerrarModalActualizacion(recordar){
+  var modal = document.getElementById('updateModal');
+  if(modal) modal.className = '';
+  if(recordar){
+    try{ localStorage.setItem(APP_UPDATE_KEY, APP_ASSET_VERSION); }catch(e){}
+  }
+}
+
+function debeMostrarActualizacion(){
+  if(location.protocol === 'file:') return false;
+  if(!esCelular()) return false;
+  try{
+    return localStorage.getItem(APP_UPDATE_KEY) !== APP_ASSET_VERSION;
+  }catch(e){
+    return true;
+  }
+}
+
+function actualizarApp(){
+  var btn = document.getElementById('btnUpdateNow');
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = 'Actualizando...';
+  }
+  var tareas = [];
+  if('caches' in window){
+    tareas.push(caches.keys().then(function(keys){
+      return Promise.all(keys.map(function(key){ return caches.delete(key); }));
+    }));
+  }
+  if('serviceWorker' in navigator){
+    tareas.push(navigator.serviceWorker.getRegistrations().then(function(regs){
+      return Promise.all(regs.map(function(reg){ return reg.unregister(); }));
+    }));
+  }
+  Promise.all(tareas).catch(function(){}).then(function(){
+    try{ localStorage.setItem(APP_UPDATE_KEY, APP_ASSET_VERSION); }catch(e){}
+    var url = new URL(location.href);
+    url.searchParams.set('appVersion', APP_ASSET_VERSION);
+    url.searchParams.set('refresh', Date.now());
+    location.replace(url.toString());
   });
 }
 
@@ -1104,6 +1194,13 @@ window.onload = function(){
   document.getElementById('instModal').addEventListener('click', function(e){
     if(e.target===this) document.getElementById('instModal').className='';
   });
+  document.getElementById('btnUpdateNow').addEventListener('click', actualizarApp);
+  document.getElementById('btnUpdateLater').addEventListener('click', function(){
+    cerrarModalActualizacion(false);
+  });
+  document.getElementById('updateModal').addEventListener('click', function(e){
+    if(e.target===this) cerrarModalActualizacion(false);
+  });
 
   /* Banner y PWA */
   checkBanner();
@@ -1119,7 +1216,9 @@ window.onload = function(){
 
   /* iPhone/iPad en Safari: Apple no ofrece prompt nativo, así que sugerimos
      una sola vez cómo agregarla a la pantalla de inicio. */
-  if(!yaInstalada && esSafariIOS() && !localStorage.getItem(IOS_TIP_KEY)){
+  if(debeMostrarActualizacion()){
+    setTimeout(mostrarModalActualizacion, 900);
+  } else if(!yaInstalada && esSafariIOS() && !localStorage.getItem(IOS_TIP_KEY)){
     setTimeout(mostrarModalIOS, 2500);
   }
 
