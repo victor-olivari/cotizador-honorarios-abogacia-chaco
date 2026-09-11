@@ -153,12 +153,12 @@ header{background:var(--az);color:#fff;padding:15px 18px 13px}
 .calcUnit{font-size:.85rem;color:var(--mt);white-space:nowrap}
 .calcTot{font-size:1.05rem;font-weight:800;color:var(--mt);white-space:nowrap}
 .calcTot.on{color:var(--gv)}
-.calcActs{display:flex;gap:6px;margin-left:auto}
+.calcActs{display:flex;gap:6px;margin-left:auto;order:3}
 .cbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border:1.5px solid var(--brd);border-radius:var(--rd);background:var(--bl);font-size:.8rem;font-weight:600;cursor:pointer;color:var(--ng);font-family:inherit;white-space:nowrap}
 .cbtn:disabled{opacity:.4;cursor:not-allowed}
 .cbtnw{border-color:#25D366;color:#128C7E}
 .cbtnp{border-color:var(--az2);color:var(--az2)}
-.calcCon{width:100%;margin-top:9px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:var(--rd);font-size:.82rem;background:var(--bl);color:var(--ng);font-family:inherit;-webkit-appearance:none}
+.calcCon{width:100%;order:4;padding:7px 10px;border:1.5px solid var(--brd);border-radius:var(--rd);font-size:.82rem;background:var(--bl);color:var(--ng);font-family:inherit;-webkit-appearance:none}
 .calcCon:focus{outline:none;border-color:var(--az2)}
 
 /* ── BARRA DE SELECCIÓN ── */
@@ -262,11 +262,14 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
   .star{float:none;margin-left:0;font-size:1.15rem}
   .pick input{width:21px;height:21px}
   .calcLbl{width:100%}
-  .calcOp{width:100%;justify-content:space-between;gap:6px}
+  .calcOp{width:100%;justify-content:space-between;gap:6px;flex-wrap:wrap}
   .calcOp input{flex:0 0 80px;font-size:1.02rem}
   .calcUnit{font-size:.8rem}
-  .calcTot{font-size:1.12rem}
-  .calcActs{width:100%;margin-left:0}
+  .calcEq{display:none}
+  .calcTot{width:100%;font-size:1.18rem;text-align:right;margin-top:4px;padding-top:7px;border-top:1px dashed rgba(37,99,168,.4)}
+  .calcTot::before{content:'Total';float:left;font-size:.7rem;font-weight:700;color:var(--mt);letter-spacing:.5px;text-transform:uppercase;padding-top:5px}
+  .calcCon{order:3;margin-top:2px}
+  .calcActs{width:100%;margin-left:0;order:4}
   .calcActs .cbtn{flex:1}
   .selbar{padding:8px 12px}
   .selacts{width:100%;margin-left:0}
@@ -427,16 +430,16 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
           <input type="text" id="calcCant" inputmode="decimal" autocomplete="off" placeholder="10,5" aria-label="Cantidad de UMA">
           <span class="calcSig">UMA &times;</span>
           <span class="calcUnit" id="calcUnit">$ 0</span>
-          <span class="calcSig">=</span>
+          <span class="calcSig calcEq">=</span>
           <strong class="calcTot" id="calcTot">$ 0</strong>
         </div>
+        <input type="text" id="calcConcepto" class="calcCon" maxlength="90" autocomplete="off"
+               placeholder="Concepto del c&aacute;lculo (opcional) &mdash; ej.: Demanda por da&ntilde;os y perjuicios">
         <div class="calcActs">
           <button class="cbtn cbtnw" id="calcWA" disabled>&#128242; <span>WhatsApp</span></button>
           <button class="cbtn cbtnp" id="calcPDF" disabled>&#128424; <span>PDF</span></button>
         </div>
       </div>
-      <input type="text" id="calcConcepto" class="calcCon" maxlength="90" autocomplete="off"
-             placeholder="Concepto del c&aacute;lculo (opcional) &mdash; ej.: Demanda por da&ntilde;os y perjuicios">
     </div>
 
     <div class="uacts">
@@ -1006,7 +1009,7 @@ function renderTabla(){
   var favs  = loadFavs();
 
   function rowHtml(it, i, par){
-    var umaStr   = it.u!==null && it.u!==undefined ? it.u+' UMA' : '—';
+    var umaStr   = it.u!==null && it.u!==undefined ? fmtCant(it.u)+' UMA' : '—';
     var esEscala = it.u===null || it.u===undefined;
     var pesosStr = esEscala
       ? '<span class="pe">'+esc(it.e||'Escala %')+'</span>'
