@@ -142,6 +142,35 @@ header{background:var(--az);color:#fff;padding:15px 18px 13px}
 .abtnw{border-color:#25D366;color:#128C7E;font-weight:600}
 .abtni{border-color:var(--az2);color:var(--az2);font-weight:600;display:none}
 
+/* ── CALCULADORA POR CANTIDAD DE UMA ── */
+.calc{margin-top:11px;padding:11px 13px;background:var(--azc);border:1px solid var(--brd);border-radius:var(--rd)}
+.calcRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.calcLbl{font-weight:700;font-size:.8rem;color:var(--az2);white-space:nowrap;text-transform:uppercase;letter-spacing:.3px}
+.calcOp{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.calcOp input{width:88px;padding:7px 9px;border:1.5px solid var(--az2);border-radius:var(--rd);font-size:.98rem;font-weight:700;color:var(--ng);background:var(--bl);font-family:inherit;text-align:center;-webkit-appearance:none}
+.calcOp input:focus{outline:none;box-shadow:0 0 0 3px rgba(37,99,168,.22)}
+.calcSig{color:var(--mt);font-size:.9rem}
+.calcUnit{font-size:.85rem;color:var(--mt);white-space:nowrap}
+.calcTot{font-size:1.05rem;font-weight:800;color:var(--mt);white-space:nowrap}
+.calcTot.on{color:var(--gv)}
+.calcActs{display:flex;gap:6px;margin-left:auto}
+.cbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border:1.5px solid var(--brd);border-radius:var(--rd);background:var(--bl);font-size:.8rem;font-weight:600;cursor:pointer;color:var(--ng);font-family:inherit;white-space:nowrap}
+.cbtn:disabled{opacity:.4;cursor:not-allowed}
+.cbtnw{border-color:#25D366;color:#128C7E}
+.cbtnp{border-color:var(--az2);color:var(--az2)}
+.calcCon{width:100%;margin-top:9px;padding:7px 10px;border:1.5px solid var(--brd);border-radius:var(--rd);font-size:.82rem;background:var(--bl);color:var(--ng);font-family:inherit;-webkit-appearance:none}
+.calcCon:focus{outline:none;border-color:var(--az2)}
+
+/* ── BARRA DE SELECCIÓN ── */
+.selbar{display:none;position:sticky;top:0;z-index:60;background:var(--az);color:#fff;padding:9px 18px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.selbar.show{display:block}
+.selin{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.selcount{font-size:.83rem;font-weight:700;white-space:nowrap}
+.selacts{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.selbar .cbtn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35);color:#fff}
+.selbar .cbtnw{border-color:#25D366;color:#7BF5AC}
+.selbar .cbtnp{border-color:#93C5FD;color:#DBEAFE}
+
 /* ── CONTROLES ── */
 .ctrl{background:var(--bl);border-bottom:1px solid var(--brd);padding:11px 18px}
 .cin{max-width:1100px;margin:0 auto;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
@@ -185,6 +214,14 @@ td.cp{text-align:right;font-weight:700;white-space:nowrap}
 .pe{display:inline-block;background:var(--bga);color:var(--ga);font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:10px}
 .nores{text-align:center;padding:40px 20px;color:var(--mt);font-size:.9rem}
 
+/* ── CELDA GESTIÓN: casilla + texto + estrella ── */
+.cgw{display:flex;align-items:center;gap:9px;width:100%}
+.gtxt{flex:1;min-width:0}
+.pick{display:inline-flex;align-items:center;flex-shrink:0;cursor:pointer}
+.pick input{width:17px;height:17px;margin:0;cursor:pointer;accent-color:var(--az2)}
+#tabla tbody tr.fd.selrow td{background:var(--bgv)!important}
+#tabla tbody tr.fd.selrow td.cp{color:var(--gv)}
+
 /* ── ESTRELLA FAVORITO ── */
 .star{
   float:right;margin-left:8px;
@@ -222,7 +259,19 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
   #tabla tr.fd td.cu::before{font-size:.65rem}
   .btot{display:none}
   .abtn span{display:none}
-  .star{float:none;margin-left:0;font-size:1.1rem}
+  .star{float:none;margin-left:0;font-size:1.15rem}
+  .pick input{width:21px;height:21px}
+  .calcLbl{width:100%}
+  .calcOp{width:100%;justify-content:space-between;gap:6px}
+  .calcOp input{flex:0 0 80px;font-size:1.02rem}
+  .calcUnit{font-size:.8rem}
+  .calcTot{font-size:1.12rem}
+  .calcActs{width:100%;margin-left:0}
+  .calcActs .cbtn{flex:1}
+  .selbar{padding:8px 12px}
+  .selacts{width:100%;margin-left:0}
+  .selacts .cbtn{flex:1;padding:8px 6px;font-size:.76rem}
+  .selacts .cbtn span{display:inline}
   /* Barra búsqueda: más espacio al buscador, menos al filtro */
   .sw{flex:2 1 0;min-width:0}
   .cin select{flex:1 1 0;max-width:none;min-width:0;font-size:.78rem}
@@ -241,22 +290,40 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
 #btnTop.show{display:flex}
 #btnTop:hover{opacity:.85}
 
+/* ── DOCUMENTO IMPRIMIBLE (oculto en pantalla) ── */
+#printDoc{display:none}
+
 /* ── PRINT ── */
 @media print{
-  @page{margin:1.5cm;size:A4}
-  #banner,.uacts,.ufbtn,.sw,.cin select,.btot,#waModal,#iosModal,#instModal,#updateModal{display:none!important}
-  header{background:var(--az)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .tscroll{overflow:visible}
-  #tabla{min-width:unset!important;font-size:9pt;border:1px solid #999;display:table!important}
-  #tabla thead{display:table-header-group!important}
-  #tabla tbody{display:table-row-group!important}
-  #tabla tr.sec,#tabla tr.fd{display:table-row!important}
-  #tabla tr.sec td,#tabla tr.fd td{display:table-cell!important;padding:5px 8px}
-  #tabla tr.sec td{background:var(--az2)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #tabla thead th{background:var(--az)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8pt;padding:6px 8px}
-  #tabla tr.fd td::before{display:none!important}
-  .ctrl{display:none}
-  .star{display:none!important}
+  @page{margin:1.4cm;size:A4}
+  body.pdoc > *{display:none!important}
+  body.pdoc #printDoc{display:block!important}
+  body.pdoc{background:#fff!important}
+  #printDoc{color:#111;font-size:10pt;font-family:'Segoe UI',system-ui,sans-serif}
+  #printDoc *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pdHead{border-bottom:2.5pt solid #1A3C6E;padding-bottom:7pt;margin-bottom:9pt}
+  .pdTit{font-size:16pt;font-weight:800;color:#1A3C6E;letter-spacing:.2pt;line-height:1.15}
+  .pdLey{font-size:8pt;color:#666;margin-top:3pt}
+  .pdMeta{display:flex;flex-wrap:wrap;gap:2pt 18pt;font-size:7.5pt;color:#555;margin-bottom:13pt}
+  .pdMeta b{color:#1A3C6E;font-weight:700}
+  .pdConcepto{font-size:11.5pt;font-weight:700;color:#111;margin-bottom:9pt;padding-left:7pt;border-left:3pt solid #2563A8}
+  .pdT{width:100%;border-collapse:collapse}
+  .pdT thead th{background:#1A3C6E;color:#fff;font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.6pt;padding:5pt 7pt;text-align:left}
+  .pdT thead th:nth-child(2){text-align:center;width:13%}
+  .pdT thead th:nth-child(3){text-align:right;width:26%}
+  .pdT tbody tr{page-break-inside:avoid}
+  .pdT tbody td{padding:6pt 7pt;border-bottom:.5pt solid #D4DAE2;vertical-align:top}
+  .pdT tbody tr:nth-child(even) td{background:#F6F8FB}
+  .pdT td.cG{font-size:10.5pt;font-weight:600;color:#111;line-height:1.3}
+  .pdT span.cR{display:block;font-size:6.8pt;font-weight:400;color:#7A8699;margin-top:2pt;text-transform:uppercase;letter-spacing:.3pt}
+  .pdT td.cU{text-align:center;font-size:9pt;font-weight:700;color:#2563A8;white-space:nowrap}
+  .pdT td.cI{text-align:right;font-size:11.5pt;font-weight:800;color:#111;white-space:nowrap}
+  .pdT tfoot td{padding:8pt 7pt;border-top:2pt solid #1A3C6E;border-bottom:none;font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.6pt;color:#1A3C6E}
+  .pdT tfoot td.cI{font-size:14pt;letter-spacing:0;color:#111}
+  .pdExtra{font-size:7pt;color:#7A8699;margin-top:6pt;font-style:italic}
+  .pdFoot{margin-top:16pt;border-top:.5pt solid #C7CEDA;padding-top:6pt}
+  .pdAviso{font-size:6.2pt;color:#8A93A3;line-height:1.5;text-align:justify}
+  .pdOrg{font-size:7pt;color:#1A3C6E;font-weight:700;margin-top:5pt}
 }
 </style>
 </head>
@@ -286,7 +353,7 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
 <div id="waModal">
   <div class="waBox">
     <h3>¿Qué desea compartir?</h3>
-    <button class="waOpt" id="waOptResultado">📋 Compartir resultado de la búsqueda actual</button>
+    <button class="waOpt" id="waOptResultado">📋 Compartir los resultados de la búsqueda</button>
     <button class="waOpt" id="waOptEnlace">🔗 Compartir enlace al programa</button>
     <button class="waCancelar" id="waOptCancelar">Cancelar</button>
   </div>
@@ -351,6 +418,27 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
       <span id="umaBadge" class="badge ba">⚠ Último valor conocido</span>
     </div>
     <div id="umaSt" class="ust"></div>
+
+    <!-- CALCULADORA POR CANTIDAD DE UMA -->
+    <div class="calc">
+      <div class="calcRow">
+        <label class="calcLbl" for="calcCant">Calcular por cantidad de UMA</label>
+        <div class="calcOp">
+          <input type="text" id="calcCant" inputmode="decimal" autocomplete="off" placeholder="10,5" aria-label="Cantidad de UMA">
+          <span class="calcSig">UMA &times;</span>
+          <span class="calcUnit" id="calcUnit">$ 0</span>
+          <span class="calcSig">=</span>
+          <strong class="calcTot" id="calcTot">$ 0</strong>
+        </div>
+        <div class="calcActs">
+          <button class="cbtn cbtnw" id="calcWA" disabled>&#128242; <span>WhatsApp</span></button>
+          <button class="cbtn cbtnp" id="calcPDF" disabled>&#128424; <span>PDF</span></button>
+        </div>
+      </div>
+      <input type="text" id="calcConcepto" class="calcCon" maxlength="90" autocomplete="off"
+             placeholder="Concepto del c&aacute;lculo (opcional) &mdash; ej.: Demanda por da&ntilde;os y perjuicios">
+    </div>
+
     <div class="uacts">
       <a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank" rel="noopener" class="abtn">🔗 <span>Valor oficial CSJN</span></a>
       <button class="abtn abtnp" id="btnPrint">🖨 <span>Imprimir / PDF</span></button>
@@ -374,6 +462,18 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
       <option value="">Todos los fueros / secciones</option>
     </select>
     <span class="btot" id="badgeTotal"></span>
+  </div>
+</div>
+
+<!-- BARRA DE SELECCIÓN -->
+<div class="selbar" id="selBar">
+  <div class="selin">
+    <span class="selcount" id="selCount">0 ítems seleccionados</span>
+    <div class="selacts">
+      <button class="cbtn cbtnw" id="selWA">&#128242; <span>Compartir</span></button>
+      <button class="cbtn cbtnp" id="selPDF">&#128424; <span>PDF</span></button>
+      <button class="cbtn" id="selClear">&#10005; <span>Limpiar</span></button>
+    </div>
   </div>
 </div>
 
@@ -417,6 +517,9 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline}
   1ª Circunscripción Judicial del Chaco &nbsp;·&nbsp; Ley 4228-C
   <a class="fguia" href="instalar.html">📱 ¿Cómo instalar la app en el celular?</a>
 </footer>
+
+<!-- DOCUMENTO IMPRIMIBLE: se arma al vuelo antes de cada impresión -->
+<div id="printDoc"></div>
 
 <button id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver al inicio">↑</button>
 
@@ -653,6 +756,27 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 function fmtP(n){ return '$ '+Math.round(n).toLocaleString('es-AR'); }
 /* El PDF de la CSJN dice "a partir del primero de mayo": lo normalizamos a "1° de mayo" */
 function fmtVig(v){ return String(v||'').replace(/^primero\s+de\s+/i, '1° de '); }
+/* Cantidad de UMA: acepta coma decimal y la muestra al modo argentino */
+function fmtCant(n){
+  return (Math.round(n*1000)/1000).toLocaleString('es-AR',{maximumFractionDigits:3});
+}
+function hoyAR(){
+  return new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+/* Resolución y vigencia efectivamente mostradas (las usan los documentos) */
+var UMA_RES_ACT = UMA_RES;
+var UMA_VIG_ACT = UMA_VIG;
+
+/* Textos legales: versión breve para los documentos compartidos */
+var AVISO_DOC =
+  'Valores orientativos calculados sobre el valor vigente de la UMA (Unidad de Medida Arancelaria) '+
+  'fijado por la Corte Suprema de Justicia de la Nación. No sustituyen la lectura íntegra de la '+
+  'Ley 4228-C ni el análisis jurídico de cada caso concreto. En causas con contenido económico, la '+
+  'regulación definitiva resulta de aplicar la escala porcentual de los arts. 19 y 21 (18%–25% del monto del proceso).';
+var AVISO_WA_CALC = 'Cálculo orientativo sobre la Ley 4228-C. No sustituye la regulación judicial de honorarios.';
+var AVISO_WA_MIN  = 'Honorarios mínimos orientativos de la Ley 4228-C.';
+var PIE_ORG = 'Consejo de Abogados y Procuradores de Resistencia · 1ª Circunscripción Judicial del Chaco';
 function getUMA(){
   var v = parseFloat(document.getElementById('valorUMA').value);
   return (!isNaN(v) && v > 0) ? v : UMA_FALLBACK;
@@ -723,6 +847,7 @@ function mostrarUMA(o, estado){
   var val = Math.round(getUMA()).toLocaleString('es-AR');
   var res = (o && o.res) || UMA_RES;
   var vig = fmtVig((o && o.vig) || UMA_VIG);
+  UMA_RES_ACT = res; UMA_VIG_ACT = vig;
   var msgs = {
     ok:       '✓ Actualizado desde CSJN',
     cache:    '✓ Verificado recientemente (caché)',
@@ -738,7 +863,54 @@ function mostrarUMA(o, estado){
     ' &nbsp;·&nbsp; Vigente desde '+esc(vig)+
     ' &nbsp;·&nbsp; <a href="https://www.csjn.gov.ar/transparencia/uma" target="_blank" rel="noopener">csjn.gov.ar/transparencia/uma</a>';
   renderTabla();
+  recalcCalc();
 }
+
+/* ════════════════════════════════════════════════
+   CALCULADORA POR CANTIDAD DE UMA
+   ════════════════════════════════════════════════ */
+function getCalcCant(){
+  var el = document.getElementById('calcCant');
+  if(!el) return 0;
+  var v = parseFloat(String(el.value||'').replace(/\./g,'').replace(',','.').trim());
+  return (!isNaN(v) && v > 0) ? v : 0;
+}
+function getCalcConcepto(){
+  var el = document.getElementById('calcConcepto');
+  return el ? (el.value||'').trim() : '';
+}
+function recalcCalc(){
+  var unit = document.getElementById('calcUnit');
+  if(!unit) return;
+  var uma = getUMA(), cant = getCalcCant(), hay = cant > 0;
+  unit.textContent = fmtP(uma);
+  var tot = document.getElementById('calcTot');
+  tot.textContent = hay ? fmtP(uma*cant) : '$ 0';
+  tot.className   = hay ? 'calcTot on' : 'calcTot';
+  document.getElementById('calcWA').disabled  = !hay;
+  document.getElementById('calcPDF').disabled = !hay;
+}
+
+/* ════════════════════════════════════════════════
+   SELECCIÓN MANUAL DE ÍTEMS
+   ════════════════════════════════════════════════ */
+var SEL = {};
+function selIdx(){
+  var a = [];
+  for(var k in SEL){ if(SEL[k]) a.push(parseInt(k,10)); }
+  a.sort(function(x,y){ return x-y; });
+  return a;
+}
+function selItems(){
+  var idx = selIdx(), r = [];
+  for(var i=0;i<idx.length;i++) r.push(D[idx[i]]);
+  return r;
+}
+function toggleSelIdx(i){
+  if(SEL[i]) delete SEL[i]; else SEL[i] = true;
+  renderTabla();
+}
+function limpiarSel(){ SEL = {}; renderTabla(); }
 
 /* ════════════════════════════════════════════════
    FETCH UMA — 3 niveles
@@ -842,10 +1014,15 @@ function renderTabla(){
     var esFav  = favs.indexOf(it.g) >= 0;
     var starCls = esFav ? 'star fav' : 'star';
     var starTip = esFav ? 'Quitar de favoritos' : 'Agregar a favoritos';
-    return '<tr class="fd '+(par%2===0?'par':'imp')+'">'
+    var marcado = SEL[i] ? ' checked' : '';
+    return '<tr class="fd '+(par%2===0?'par':'imp')+(SEL[i]?' selrow':'')+'">'
       +'<td class="cg" data-label="">'
+      +'<div class="cgw">'
+      +'<label class="pick" title="Seleccionar para compartir o imprimir">'
+      +'<input type="checkbox"'+marcado+' onchange="toggleSelIdx('+i+')"></label>'
+      +'<span class="gtxt">'+esc(it.g)+'</span>'
       +'<button class="'+starCls+'" onclick="toggleFavIdx('+i+')" title="'+starTip+'">'+(esFav?'★':'☆')+'</button>'
-      +esc(it.g)+'</td>'
+      +'</div></td>'
       +'<td class="cu" data-label="UMA'+(it.r ? ' ('+it.r+')' : '')+'">'+esc(umaStr)+'</td>'
       +'<td class="cr" data-label="Ref.">'+esc(it.r||'')+'</td>'
       +'<td class="cp" data-label="En pesos">'+pesosStr+'</td>'
@@ -889,6 +1066,15 @@ function renderTabla(){
   var hay = cnt > 0;
   document.getElementById('nores').style.display  = hay ? 'none' : 'block';
   document.getElementById('tabla').style.display  = hay ? '' : 'none';
+
+  /* Barra de selección: sólo aparece cuando hay ítems marcados */
+  var n   = selIdx().length;
+  var bar = document.getElementById('selBar');
+  if(bar){
+    bar.className = n > 0 ? 'selbar show' : 'selbar';
+    document.getElementById('selCount').textContent =
+      n === 1 ? '1 ítem seleccionado' : n+' ítems seleccionados';
+  }
 }
 
 function startPolling(){
@@ -937,51 +1123,199 @@ function getItemsVisibles(){
   }
   return res;
 }
-function enviarResultados(){
-  var uma   = getUMA();
-  var busq  = (document.getElementById('busqueda').value||'').trim();
-  var items = getItemsVisibles();
-  var max   = Math.min(items.length, 15);
-  var lineas= [
-    '*Honorarios Mínimos — Ley 4228-C Chaco*',
-    'Consulta: '+(busq?'"'+busq+'"':'todas las gestiones'),
-    'UMA vigente: $'+Math.round(uma).toLocaleString('es-AR'),
-    'Fecha: '+new Date().toLocaleDateString('es-AR'),
-    ''
-  ];
-  var secAnt='';
-  for(var i=0;i<max;i++){
-    var it=items[i];
-    if(it.s!==secAnt){ secAnt=it.s; lineas.push('— *'+it.s+'* —'); }
-    var pesos = it.u!==null && it.u!==undefined ? fmtP(it.u*uma) : (it.e||'Escala %');
-    lineas.push('• '+it.g);
-    lineas.push('  '+(it.u!==null&&it.u!==undefined ? it.u+' UMA = '+pesos : pesos));
-  }
-  if(items.length>max) lineas.push('… y '+(items.length-max)+' gest. más');
-  lineas.push('');
-  lineas.push('_Consejo de Abogados y Procuradores de Resistencia_');
-  lineas.push('_1ª Circunscripción Judicial del Chaco — Ley 4228-C_');
-  var txt = lineas.join('\n');
-  cerrarModal();
-  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(txt),'_blank');
+
+/* ════════════════════════════════════════════════
+   DOCUMENTOS COMPARTIBLES
+   Un documento es {titulo, concepto, filas, total, nota}.
+   De ahí salen tanto el PDF como el texto de WhatsApp,
+   para que ambos digan exactamente lo mismo.
+   ════════════════════════════════════════════════ */
+
+/* Cálculo libre por cantidad de UMA */
+function docCalculo(){
+  var uma = getUMA(), cant = getCalcCant();
+  if(!(cant > 0)) return null;
+  var con = getCalcConcepto();
+  return {
+    tipo:    'calculo',
+    titulo:  'Cálculo de honorarios',
+    concepto: con,
+    colGestion: 'Detalle del cálculo',
+    filas: [{
+      g:   'Honorarios por cantidad de UMA',
+      r:   fmtCant(cant)+' UMA × '+fmtP(uma)+' por UMA',
+      uma: fmtCant(cant),
+      imp: fmtP(uma*cant)
+    }],
+    total: fmtP(uma*cant),
+    nota:  ''
+  };
 }
+
+/* Lista de gestiones: selección manual o resultados de la búsqueda */
+function docItems(items, titulo, resto){
+  if(!items || !items.length) return null;
+  var uma = getUMA(), filas = [], suma = 0, hayEscala = false;
+  for(var i=0;i<items.length;i++){
+    var it  = items[i];
+    var num = it.u !== null && it.u !== undefined;
+    if(num) suma += it.u*uma; else hayEscala = true;
+    filas.push({
+      g:   it.g,
+      r:   (it.s||'')+(it.r ? ' · '+it.r : ''),
+      uma: num ? fmtCant(it.u) : '—',
+      imp: num ? fmtP(it.u*uma) : (it.e || 'Escala %')
+    });
+  }
+  return {
+    tipo:  'items',
+    titulo: titulo,
+    concepto: '',
+    colGestion: 'Gestión o trámite',
+    filas: filas,
+    total: (filas.length > 1 && suma > 0) ? fmtP(suma) : '',
+    resto: resto || 0,
+    nota:  (hayEscala && filas.length > 1)
+             ? 'El total no incluye los ítems sujetos a escala porcentual.' : ''
+  };
+}
+
+/* ── PDF / Impresión ── */
+function armarPrintDoc(doc){
+  var h = '';
+  h += '<div class="pdHead">'
+     +   '<div class="pdTit">'+esc(doc.titulo)+'</div>'
+     +   '<div class="pdLey">Ley 4228-C · Honorarios profesionales de la abogacía · Provincia del Chaco</div>'
+     + '</div>';
+  h += '<div class="pdMeta">'
+     +   '<span><b>UMA</b> '+esc(fmtP(getUMA()))+'</span>'
+     +   '<span><b>'+esc(UMA_RES_ACT)+'</b> · vigente desde '+esc(UMA_VIG_ACT)+'</span>'
+     +   '<span><b>Emitido</b> '+esc(hoyAR())+'</span>'
+     + '</div>';
+  if(doc.tipo === 'calculo' && doc.concepto)
+    h += '<div class="pdConcepto">'+esc(doc.concepto)+'</div>';
+  h += '<table class="pdT"><thead><tr>'
+     +   '<th>'+esc(doc.colGestion)+'</th><th>UMA</th><th>Importe</th>'
+     + '</tr></thead><tbody>';
+  for(var i=0;i<doc.filas.length;i++){
+    var f = doc.filas[i];
+    h += '<tr>'
+      +    '<td class="cG">'+esc(f.g)+(f.r ? '<span class="cR">'+esc(f.r)+'</span>' : '')+'</td>'
+      +    '<td class="cU">'+esc(f.uma)+'</td>'
+      +    '<td class="cI">'+esc(f.imp)+'</td>'
+      +  '</tr>';
+  }
+  h += '</tbody>';
+  if(doc.total)
+    h += '<tfoot><tr><td>Total</td><td></td><td class="cI">'+esc(doc.total)+'</td></tr></tfoot>';
+  h += '</table>';
+  if(doc.nota)  h += '<p class="pdExtra">'+esc(doc.nota)+'</p>';
+  if(doc.resto) h += '<p class="pdExtra">Se listan '+doc.filas.length+' de '+
+                     (doc.filas.length+doc.resto)+' gestiones coincidentes.</p>';
+  h += '<div class="pdFoot">'
+     +   '<p class="pdAviso">'+esc(AVISO_DOC)+'</p>'
+     +   '<p class="pdOrg">'+esc(PIE_ORG)+'</p>'
+     + '</div>';
+  document.getElementById('printDoc').innerHTML = h;
+}
+
+function imprimirDoc(doc){
+  if(!doc) return;
+  armarPrintDoc(doc);
+  document.body.className = 'pdoc';
+  var limpiar = function(){ document.body.className = ''; };
+  window.addEventListener('afterprint', limpiar, {once:true});
+  setTimeout(function(){
+    window.print();
+    setTimeout(limpiar, 1200);
+  }, 60);
+}
+
+/* ── WhatsApp ── */
+function abrirWA(txt){
+  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(txt), '_blank');
+}
+
+function waDoc(doc){
+  var L = [], uma = getUMA();
+  L.push('*'+doc.titulo.toUpperCase()+'*');
+  L.push('_Ley 4228-C — Chaco_');
+  L.push('');
+  if(doc.tipo === 'calculo'){
+    var f = doc.filas[0];
+    if(doc.concepto) L.push('*'+doc.concepto+'*');
+    L.push(f.r);
+    L.push('*TOTAL: '+doc.total+'*');
+  } else {
+    var uno = doc.filas.length === 1;
+    for(var i=0;i<doc.filas.length;i++){
+      var x = doc.filas[i];
+      L.push((uno ? '' : (i+1)+'. ')+x.g);
+      L.push('   '+(x.uma !== '—' ? x.uma+' UMA · *'+x.imp+'*' : '*'+x.imp+'*'));
+    }
+    if(doc.resto) L.push('_… y '+doc.resto+' gestiones más en la app_');
+    if(doc.total){
+      L.push('');
+      L.push('*TOTAL: '+doc.total+'*');
+      if(doc.nota) L.push('_'+doc.nota+'_');
+    }
+  }
+  L.push('');
+  L.push('UMA '+fmtP(uma)+' — '+UMA_RES_ACT);
+  L.push('Vigente desde '+UMA_VIG_ACT+' · '+hoyAR());
+  L.push('');
+  L.push('_'+(doc.tipo === 'calculo' ? AVISO_WA_CALC : AVISO_WA_MIN)+'_');
+  L.push('_'+PIE_ORG+'_');
+  return L.join('\n');
+}
+
+/* ── Disparadores ── */
+function tituloResultados(){
+  var busq = (document.getElementById('busqueda').value||'').trim();
+  return busq ? 'Honorarios mínimos — '+busq : 'Honorarios mínimos';
+}
+function docSeleccion(){ return docItems(selItems(), 'Honorarios mínimos'); }
+
+/* El PDF admite la lista completa; WhatsApp se recorta para no cortar el mensaje */
+function docResultados(limite){
+  var items = getItemsVisibles();
+  if(limite && items.length > limite)
+    return docItems(items.slice(0, limite), tituloResultados(), items.length - limite);
+  return docItems(items, tituloResultados());
+}
+
+function compartirCalculoWA(){ var d = docCalculo(); if(d) abrirWA(waDoc(d)); }
+function imprimirCalculo(){    imprimirDoc(docCalculo()); }
+function compartirSelWA(){     var d = docSeleccion(); if(d) abrirWA(waDoc(d)); }
+function imprimirSeleccion(){  imprimirDoc(docSeleccion()); }
+
+function enviarResultados(){
+  cerrarModal();
+  var d = docResultados(25);
+  if(d) abrirWA(waDoc(d));
+}
+function imprimirGeneral(){
+  imprimirDoc(selIdx().length ? docSeleccion() : docResultados());
+}
+
 function enviarEnlace(){
   var url = location.protocol==='file:'
     ? '(Programa guardado como archivo local.)'
-    : location.href;
+    : location.href.split('?')[0];
   var txt =
-    '*Honorarios Mínimos — Ley 4228-C Chaco*\n\n'+
-    'Herramienta del Consejo de Abogados y Procuradores de Resistencia\n'+
-    '1ª Circunscripción Judicial del Chaco\n\n'+
-    'Enlace al programa:\n'+url+'\n\n'+
-    '_Para usar todas las funciones, ábralo en Chrome o Safari._';
+    '*HONORARIOS MÍNIMOS — LEY 4228-C*\n'+
+    '_Chaco_\n\n'+
+    'Consultá los honorarios mínimos de la abogacía y calculá importes por cantidad de UMA.\n\n'+
+    url+'\n\n'+
+    '_Se instala gratis desde el navegador y funciona sin internet._\n'+
+    '_'+PIE_ORG+'_';
   cerrarModal();
-  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(txt),'_blank');
+  abrirWA(txt);
 }
+
 function mostrarModal(){
-  var items = getItemsVisibles();
-  var busq  = (document.getElementById('busqueda').value||'').trim();
-  if(busq && items.length>0 && items.length<=50){ enviarResultados(); return; }
+  /* Con ítems marcados, compartimos exactamente esos y nada más */
+  if(selIdx().length){ compartirSelWA(); return; }
   document.getElementById('waModal').className = 'show';
 }
 function cerrarModal(){ document.getElementById('waModal').className=''; }
@@ -1171,9 +1505,26 @@ window.onload = function(){
 
   /* Botones */
   document.getElementById('btnFetch').addEventListener('click',  function(){ fetchUMA(); });
-  document.getElementById('btnPrint').addEventListener('click',  function(){ window.print(); });
+  document.getElementById('btnPrint').addEventListener('click',  imprimirGeneral);
   document.getElementById('btnWA').addEventListener('click',     mostrarModal);
   document.getElementById('btnTheme').addEventListener('click',  cycleTheme);
+
+  /* Calculadora por cantidad de UMA */
+  var cEl = document.getElementById('calcCant');
+  cEl.addEventListener('input',  recalcCalc);
+  cEl.addEventListener('change', recalcCalc);
+  cEl.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); cEl.blur(); }
+  });
+  document.getElementById('calcConcepto').addEventListener('input', recalcCalc);
+  document.getElementById('calcWA').addEventListener('click',  compartirCalculoWA);
+  document.getElementById('calcPDF').addEventListener('click', imprimirCalculo);
+  recalcCalc();
+
+  /* Barra de selección manual */
+  document.getElementById('selWA').addEventListener('click',    compartirSelWA);
+  document.getElementById('selPDF').addEventListener('click',   imprimirSeleccion);
+  document.getElementById('selClear').addEventListener('click', limpiarSel);
 
   /* Modal WA */
   document.getElementById('waOptResultado').addEventListener('click', enviarResultados);
