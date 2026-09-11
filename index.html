@@ -872,11 +872,34 @@ function mostrarUMA(o, estado){
 /* ════════════════════════════════════════════════
    CALCULADORA POR CANTIDAD DE UMA
    ════════════════════════════════════════════════ */
+/* El punto y la coma valen lo mismo: ambos separan la fracción.
+   "10.5" y "10,5" son diez UMA y media. Si vinieran varios separadores
+   —de pegar un número ya formateado, "1.234,5"— manda el último y los
+   anteriores se toman como de miles. */
+function parseCant(raw){
+  var t = String(raw||'').replace(/[^\d.,]/g,'');
+  if(!t) return 0;
+  var corte = Math.max(t.lastIndexOf('.'), t.lastIndexOf(','));
+  var ent = corte >= 0 ? t.slice(0, corte) : t;
+  var dec = corte >= 0 ? t.slice(corte+1) : '';
+  ent = ent.replace(/[.,]/g,'');
+  dec = dec.replace(/[.,]/g,'');
+  var v = parseFloat((ent || '0') + (dec ? '.'+dec : ''));
+  return (!isNaN(v) && v > 0) ? v : 0;
+}
 function getCalcCant(){
   var el = document.getElementById('calcCant');
-  if(!el) return 0;
-  var v = parseFloat(String(el.value||'').replace(/\./g,'').replace(',','.').trim());
-  return (!isNaN(v) && v > 0) ? v : 0;
+  return el ? parseCant(el.value) : 0;
+}
+/* Al salir del campo lo reescribimos al modo argentino y sin separador de
+   miles, para que se vea exactamente qué cantidad quedó interpretada
+   y para que volver a editarlo no cambie el número. */
+function normalizarCant(){
+  var el = document.getElementById('calcCant');
+  if(!el) return;
+  var v = parseCant(el.value);
+  el.value = v > 0 ? String(v).replace('.', ',') : '';
+  recalcCalc();
 }
 function getCalcConcepto(){
   var el = document.getElementById('calcConcepto');
@@ -1514,8 +1537,8 @@ window.onload = function(){
 
   /* Calculadora por cantidad de UMA */
   var cEl = document.getElementById('calcCant');
-  cEl.addEventListener('input',  recalcCalc);
-  cEl.addEventListener('change', recalcCalc);
+  cEl.addEventListener('input', recalcCalc);
+  cEl.addEventListener('blur',  normalizarCant);
   cEl.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){ e.preventDefault(); cEl.blur(); }
   });
