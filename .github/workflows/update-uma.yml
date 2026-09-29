@@ -1,6 +1,6 @@
 name: Actualizar valor UMA
 
-# Se ejecuta automáticamente el día 2 de cada mes (la CSJN suele publicar a principios de mes)
+# Revisa todos los días Transparencia/UMA y Novedades de la CSJN
 # También se puede ejecutar manualmente desde la pestaña Actions de GitHub
 on:
   schedule:
@@ -37,12 +37,12 @@ jobs:
       - name: Verificar cambios
         id: cambios
         run: |
-          if git diff --quiet uma-data.json; then
+          if git diff --quiet uma-data.json index.html; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Cambios detectados en uma-data.json:"
-            git diff uma-data.json
+            git diff uma-data.json index.html
           fi
 
       - name: Commit y push si hubo cambios
@@ -52,10 +52,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           VALOR=$(python3 -c "import json; d=json.load(open('uma-data.json')); print(d['valor'])")
           RES=$(python3   -c "import json; d=json.load(open('uma-data.json')); print(d['res'])")
-          git add uma-data.json
+          git add uma-data.json index.html
           git commit -m "UMA: \$${VALOR} — ${RES} [auto]"
           git push
-          echo "✓ uma-data.json actualizado y publicado."
+          echo "✓ UMA actualizada y publicada."
 
       - name: Sin cambios
         if: steps.cambios.outputs.changed == 'false'
