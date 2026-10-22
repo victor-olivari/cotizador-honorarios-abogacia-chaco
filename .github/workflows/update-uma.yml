@@ -1,10 +1,12 @@
 name: Actualizar valor UMA
 
-# Revisa todos los días Transparencia/UMA y Novedades de la CSJN
-# También se puede ejecutar manualmente desde la pestaña Actions de GitHub
+# Revisa una vez por día todas las secciones de la CSJN donde se publica la
+# UMA (Inicio, Novedades, Resoluciones, Transparencia/UMA y el PDF) y la tabla
+# del CPACF como control. Si ninguna fuente responde, la ejecución falla y
+# GitHub avisa por mail. También se puede ejecutar a mano desde la pestaña Actions.
 on:
   schedule:
-    - cron: '0 14 * * *'   # Todos los días, 14:00 UTC (11:00 hs Argentina)
+    - cron: '1 11 * * *'   # 08:01 hs Argentina (11:01 UTC)
   workflow_dispatch:
     inputs:
       force:
