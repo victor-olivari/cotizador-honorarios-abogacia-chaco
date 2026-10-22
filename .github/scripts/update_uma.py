@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
@@ -68,7 +69,7 @@ def candidato_transparencia() -> dict | None:
     """Primera fila de la lista: la resolución más reciente que allí figura."""
     txt = fetch_jina(CSJN_UMA_PAGE)
     m = re.search(
-        r"(\d{1,2} de \w+ de (20\d\d)).{0,200}?Resoluci[oó]n\s+(\d+).{0,120}?descargar\?ID=(\d+)",
+        r"(\d{1,2} de \w+ de (20\d\d)).{0,200}?Resoluci[oó]n\s+(?:N\s*[°º.]?\s*)?(\d+).{0,200}?descargar\?ID=(\d+)",
         txt,
         re.IGNORECASE | re.DOTALL,
     )
@@ -91,7 +92,12 @@ def candidato_novedades() -> dict | None:
         print("  Novedades: no hay noticias recientes sobre la UMA.")
         return None
     detalle = re.sub(r"\s+", " ", fetch_jina(m.group(1)))
-    rm = re.search(r"resoluci[oó]n[^\[\d]{0,80}\[?(\d+)\s*/\s*(20\d\d)\]?\(?[^)]*?descargar\?ID=(\d+)", detalle, re.IGNORECASE)
+    # "resolución de la Secretaría General de Administración [N° 2622/2026](…descargar?ID=182918)"
+    rm = re.search(
+        r"resoluci[oó]n[^\[\d]{0,80}\[?\s*(?:N\s*[°º.]?\s*)?(\d+)\s*/\s*(20\d\d)\s*\]?\s*\(?[^)]*?descargar\?ID=(\d+)",
+        detalle,
+        re.IGNORECASE,
+    )
     if not rm:
         raise ValueError(f"La noticia {m.group(1)} no trae número de resolución y PDF.")
     cand = {
@@ -181,8 +187,21 @@ def main() -> int:
 
     candidatos, errores = [], []
     for nombre, fn in (("Transparencia/UMA", candidato_transparencia), ("Novedades", candidato_novedades)):
+        # r.jina.ai a veces devuelve la página sin renderizar: se reintenta
+        for intento in range(3):
+            try:
+                c = fn()
+                if c or intento == 2:
+                    break
+            except Exception as e:
+                if intento == 2:
+                    c = e
+                else:
+                    print(f"  {nombre}: reintento ({e})")
+                    time.sleep(10)
         try:
-            c = fn()
+            if isinstance(c, Exception):
+                raise c
             if c:
                 print(f"  {nombre}: Resolución {c['res_num']}/{c['anio']} (PDF ID {c['docId']})")
                 candidatos.append(c)
