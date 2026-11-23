@@ -1,23 +1,26 @@
 {
-  "valor": 108005,
-  "res": "Res. SGA N° 2622/2026",
-  "vig": "primero de septiembre de 2026",
-  "desde": "2026-09-01",
-  "fecha": "2026-10-21",
-  "acordada": "Acordada CSJN N° 31/2026",
+  "valor": 110381,
+  "res": "Res. SGA N° 3006/2026",
+  "vig": "primero de octubre de 2026",
+  "desde": "2026-10-01",
+  "fecha": "2026-11-20",
+  "acordada": "Acordada CSJN N° 37/2026",
   "ley": "Ley 27.423, art. 19",
-  "docId": 182918,
-  "pdf": "https://www.csjn.gov.ar/documentos/descargar?ID=182918",
+  "docId": 183642,
+  "pdf": "https://www.csjn.gov.ar/documentos/descargar?ID=183642",
   "fuentes": [
-    "cpacf",
-    "inicio",
-    "novedades",
     "resoluciones",
     "transparencia",
     "pdf"
   ],
-  "actualizado": "2026-10-22",
+  "actualizado": "2026-11-23",
   "historial": [
+    {
+      "res": "Res. SGA N° 3006/2026",
+      "fecha": "2026-11-20",
+      "valor": 110381,
+      "desde": "2026-10-01"
+    },
     {
       "res": "Res. SGA N° 2622/2026",
       "fecha": "2026-10-21",
