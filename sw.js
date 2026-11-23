@@ -1,5 +1,5 @@
 /* Service Worker - Honorarios Minimos Ley 4228-C Chaco */
-const CACHE = 'honorarios-chaco-v2026-10-enlace';
+const CACHE = 'honorarios-chaco-v2026-11-impresion';
 const STATIC = [
   './',
   './index.html',
